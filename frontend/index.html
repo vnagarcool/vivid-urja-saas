@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>VIVID URJA</title>
+</head>
+<body>
+
+<h1>Solar Lead Form ☀️</h1>
+
+<input id="name" placeholder="Your Name">
+<button onclick="send()">Submit</button>
+
+<script>
+function send(){
+  fetch("http://localhost:5000/api/leads",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      name: document.getElementById("name").value
+    })
+  })
+  alert("Lead sent 🚀")
+}
+</script>
+
+</body>
+</html>
