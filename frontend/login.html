@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex items-center justify-center h-screen bg-gray-100">
+
+<div class="bg-white p-6 rounded shadow w-80">
+
+  <h2 class="text-xl font-bold mb-4 text-center">Admin Login</h2>
+
+  <input id="email" placeholder="Email"
+    class="border p-2 w-full mb-2"/>
+
+  <input id="password" type="password" placeholder="Password"
+    class="border p-2 w-full mb-4"/>
+
+  <button onclick="login()"
+    class="bg-green-600 text-white w-full py-2 rounded">
+    Login
+  </button>
+
+</div>
+
+<script>
+function login(){
+  fetch("https://vivid-urja-saas.onrender.com/api/login",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.success){
+      localStorage.setItem("token", data.token)
+      window.location.href = "/dashboard.html"
+    } else {
+      alert("Invalid login")
+    }
+  })
+}
+</script>
+
+</body>
+</html>
