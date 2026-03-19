@@ -1,26 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>VIVID URJA</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VIVID URJA Solar</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
 
-<h1>Solar Lead Form ☀️</h1>
+<body class="bg-gray-50">
 
-<input id="name" placeholder="Your Name">
-<button onclick="send()">Submit</button>
+<!-- HERO -->
+<section class="bg-gradient-to-r from-green-600 to-yellow-400 text-white p-10 text-center">
+  <h1 class="text-4xl font-bold mb-4">₹0 Electricity Bill with Solar ☀️</h1>
+  <p class="text-lg">Install rooftop solar & save lakhs</p>
+</section>
 
+<!-- CALCULATOR -->
+<section class="p-6 text-center">
+  <h2 class="text-2xl font-bold mb-4">Solar Savings Calculator</h2>
+
+  <input id="bill" type="number" placeholder="Monthly Bill ₹"
+    class="border p-3 rounded w-64 mb-3"/><br>
+
+  <button onclick="calculate()"
+    class="bg-green-600 text-white px-6 py-2 rounded">
+    Calculate Savings
+  </button>
+
+  <p id="result" class="mt-4 text-xl font-bold text-green-700"></p>
+</section>
+
+<!-- LEAD FORM -->
+<section class="bg-white p-6 shadow rounded max-w-md mx-auto">
+  <h2 class="text-xl font-bold mb-4 text-center">Get Free Solar Quote</h2>
+
+  <input id="name" placeholder="Name"
+    class="border p-2 w-full mb-2"/>
+
+  <input id="phone" placeholder="Phone"
+    class="border p-2 w-full mb-2"/>
+
+  <button onclick="sendLead()"
+    class="bg-yellow-500 w-full py-2 rounded font-bold">
+    Submit
+  </button>
+</section>
+
+<!-- SCRIPT -->
 <script>
-function send(){
+
+function calculate(){
+  const bill = document.getElementById("bill").value
+  const saving = bill * 12 * 25
+  document.getElementById("result").innerText =
+    "Estimated 25 Year Savings: ₹" + saving
+}
+
+function sendLead(){
   fetch("https://vivid-urja-saas.onrender.com/api/leads",{
     method:"POST",
     headers:{ "Content-Type":"application/json" },
     body: JSON.stringify({
-      name: document.getElementById("name").value
+      name: document.getElementById("name").value,
+      phone: document.getElementById("phone").value
     })
   })
-  alert("Lead sent 🚀")
+
+  alert("Lead Submitted 🚀")
 }
+
 </script>
 
 </body>
