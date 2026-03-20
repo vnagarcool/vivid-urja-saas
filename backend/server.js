@@ -3,15 +3,16 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 
 const app = express()
+
 app.use(express.json())
 app.use(cors())
 
-// 🔥 MongoDB Connect
+// ✅ MongoDB Connection
 mongoose.connect("mongodb+srv://vinod:YOUR_PASSWORD@cluster0.etal4.mongodb.net/solar")
 .then(()=> console.log("MongoDB Connected"))
 .catch(err => console.log(err))
 
-// 🔥 Schema
+// ✅ Schema
 const LeadSchema = new mongoose.Schema({
     name: String,
     phone: String,
@@ -20,10 +21,10 @@ const LeadSchema = new mongoose.Schema({
     time: Date
 })
 
-// 🔥 Model
+// ✅ Model
 const Lead = mongoose.model("Lead", LeadSchema)
 
-// 🔥 Save Lead
+// ✅ Save Lead
 app.post("/api/leads", async (req,res)=>{
     try{
         const newLead = new Lead({
@@ -34,16 +35,21 @@ app.post("/api/leads", async (req,res)=>{
 
         await newLead.save()
 
-        res.json({message:"Lead saved in DB"})
+        res.json({message:"Lead saved"})
     }catch(err){
         res.status(500).json({error: err.message})
     }
 })
 
-// 🔥 Get Leads
+// ✅ Get Leads
 app.get("/api/leads", async (req,res)=>{
     const leads = await Lead.find().sort({time:-1})
     res.json(leads)
 })
 
-app.listen(5000, ()=> console.log("Server running"))
+// ✅ PORT FIX (IMPORTANT 🔥)
+const PORT = process.env.PORT || 5000
+
+app.listen(PORT, ()=>{
+    console.log("Server running on port " + PORT)
+})
