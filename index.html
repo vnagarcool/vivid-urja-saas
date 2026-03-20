@@ -1,109 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VIVID URJA Solar</title>
+  <title>VIVID URJA - Solar Lead</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 300px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: green;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: darkgreen;
+    }
+
+    #msg {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
-<body class="bg-gray-50">
+<body>
 
-<!-- HERO -->
-<section class="bg-gradient-to-r from-green-600 to-yellow-400 text-white p-10 text-center">
-  <h1 class="text-4xl font-bold mb-4">₹0 Electricity Bill with Solar ☀️</h1>
-  <p class="text-lg">Install rooftop solar & save lakhs</p>
-</section>
-
-<!-- CALCULATOR -->
-<section class="p-6 text-center">
-  <h2 class="text-2xl font-bold mb-4">Solar Savings Calculator</h2>
-
-  <input id="bill" type="number" placeholder="Monthly Bill ₹"
-    class="border p-3 rounded w-64 mb-3"/><br>
-
-  <button onclick="calculate()"
-    class="bg-green-600 text-white px-6 py-2 rounded">
-    Calculate Savings
-  </button>
-
-  <p id="result" class="mt-4 text-xl font-bold text-green-700"></p>
-</section>
-  <h2>Solar Inquiry Form ☀️</h2>
+<h2>Solar Inquiry Form ☀️</h2>
 
 <form id="leadForm">
-  <input type="text" placeholder="Name" id="name" required><br><br>
-  <input type="text" placeholder="Phone" id="phone" required><br><br>
-  <input type="text" placeholder="City" id="city" required><br><br>
-  
+  <input type="text" name="name" placeholder="Name" required>
+  <input type="text" name="phone" placeholder="Phone" required>
+  <input type="text" name="city" placeholder="City" required>
+
   <button type="submit">Submit</button>
 </form>
 
 <p id="msg"></p>
 
-<!-- LEAD FORM -->
-<section class="bg-white p-6 shadow rounded max-w-md mx-auto">
-  <h2 class="text-xl font-bold mb-4 text-center">Get Free Solar Quote</h2>
-
-  <input id="name" placeholder="Name"
-    class="border p-2 w-full mb-2"/>
-
-  <input id="phone" placeholder="Phone"
-    class="border p-2 w-full mb-2"/>
-
-  <button onclick="sendLead()"
-    class="bg-yellow-500 w-full py-2 rounded font-bold">
-    Submit
-  </button>
-</section>
-
-<!-- SCRIPT -->
-<script>
-  
-function calculate(){
-  const bill = document.getElementById("bill").value
-  const saving = bill * 12 * 25
-  document.getElementById("result").innerText =
-    "Estimated 25 Year Savings: ₹" + saving
-}
-
-function sendLead(){
-  fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify({
-      name: document.getElementById("name").value,
-      phone: document.getElementById("phone").value
-    })
-  })
-
-  alert("Lead Submitted 🚀")
-}
-
-</script>
 <script>
 document.getElementById("leadForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
   const data = {
-    name: document.getElementById("name").value,
-    phone: document.getElementById("phone").value,
-    city: document.getElementById("city").value
+    name: document.querySelector('[name="name"]').value,
+    phone: document.querySelector('[name="phone"]').value,
+    city: document.querySelector('[name="city"]').value
   };
 
-  const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  });
+  try {
+    const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
 
-  const result = await res.json();
+    const result = await res.json();
+    document.getElementById("msg").innerText = "Lead Saved ✅";
 
-  document.getElementById("msg").innerText = result.message;
+  } catch (err) {
+    document.getElementById("msg").innerText = "Error ❌";
+  }
 });
 </script>
+
 </body>
 </html>
