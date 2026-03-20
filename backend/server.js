@@ -1,57 +1,43 @@
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
 
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-const express = require("express")
-const mongoose = require("mongoose")
-const cors = require("cors")
+// 🔥 MongoDB Connect
+mongoose.connect(process.env.MONGO_URL)
+.then(() => console.log("MongoDB Connected ✅"))
+.catch(err => console.log(err));
 
-const app = express()
-
-app.use(express.json())
-app.use(cors())
-
-// ✅ MongoDB Connection
-mongoose.connect("mongodb+srv://vinod:YOUR_PASSWORD@cluster0.etal4.mongodb.net/solar")
-.then(()=> console.log("MongoDB Connected"))
-.catch(err => console.log(err))
-
-// ✅ Schema
+// 🔥 Schema
 const LeadSchema = new mongoose.Schema({
-    name: String,
-    phone: String,
-    city: String,
-    status: String,
-    time: Date
-})
+  name: String,
+  phone: String,
+  city: String,
+  status: { type: String, default: "New" },
+  createdAt: { type: Date, default: Date.now }
+});
 
-// ✅ Model
-const Lead = mongoose.model("Lead", LeadSchema)
+const Lead = mongoose.model("Lead", LeadSchema);
 
-// ✅ Save Lead
-app.post("/api/leads", async (req,res)=>{
-    try{
-        const newLead = new Lead({
-            ...req.body,
-            status: "New",
-            time: new Date()
-        })
+// 🔥 Save Lead
+app.post("/api/leads", async (req, res) => {
+  const lead = new Lead(req.body);
+  await lead.save();
+  res.json({ message: "Lead Saved ✅" });
+});
 
-        await newLead.save()
+// 🔥 Get Leads
+app.get("/api/leads", async (req, res) => {
+  const leads = await Lead.find().sort({ createdAt: -1 });
+  res.json(leads);
+});
 
-        res.json({message:"Lead saved"})
-    }catch(err){
-        res.status(500).json({error: err.message})
-    }
-})
+// Root
+app.get("/", (req, res) => {
+  res.send("VIVID URJA API RUNNING 🚀");
+});
 
-// ✅ Get Leads
-app.get("/api/leads", async (req,res)=>{
-    const leads = await Lead.find().sort({time:-1})
-    res.json(leads)
-})
-
-// ✅ PORT FIX (IMPORTANT 🔥)
-const PORT = process.env.PORT || 5000
-
-app.listen(PORT, ()=>{
-    console.log("Server running on port " + PORT)
-})
+app.listen(10000, () => console.log("Server running"));
