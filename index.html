@@ -30,6 +30,17 @@
 
   <p id="result" class="mt-4 text-xl font-bold text-green-700"></p>
 </section>
+  <h2>Solar Inquiry Form ☀️</h2>
+
+<form id="leadForm">
+  <input type="text" placeholder="Name" id="name" required><br><br>
+  <input type="text" placeholder="Phone" id="phone" required><br><br>
+  <input type="text" placeholder="City" id="city" required><br><br>
+  
+  <button type="submit">Submit</button>
+</form>
+
+<p id="msg"></p>
 
 <!-- LEAD FORM -->
 <section class="bg-white p-6 shadow rounded max-w-md mx-auto">
@@ -49,7 +60,26 @@
 
 <!-- SCRIPT -->
 <script>
+ const data = {
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    city: document.getElementById("city").value
+  };
 
+  const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+
+  document.getElementById("msg").innerText = result.message;
+});
+</script>
+  
 function calculate(){
   const bill = document.getElementById("bill").value
   const saving = bill * 12 * 25
