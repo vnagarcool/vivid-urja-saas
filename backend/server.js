@@ -1,4 +1,4 @@
-let leads = []
+let leads = [mongodb+srv://GreatStacks:<db_password>@cluster0.etal4.mongodb.net/?appName=Cluster0]
 
 app.post("/api/leads", (req,res)=>{
   leads.push({
