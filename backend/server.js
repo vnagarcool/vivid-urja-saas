@@ -1,3 +1,9 @@
+const mongoose = require("mongoose");
+
+mongoose.connect("YOUR_MONGODB_URL")
+.then(() => console.log("MongoDB Connected ✅"))
+.catch(err => console.log(err));
+
 const express = require("express")
 const mongoose = require("mongoose")
 const cors = require("cors")
