@@ -60,25 +60,6 @@
 
 <!-- SCRIPT -->
 <script>
- const data = {
-    name: document.getElementById("name").value,
-    phone: document.getElementById("phone").value,
-    city: document.getElementById("city").value
-  };
-
-  const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  });
-
-  const result = await res.json();
-
-  document.getElementById("msg").innerText = result.message;
-});
-</script>
   
 function calculate(){
   const bill = document.getElementById("bill").value
@@ -101,6 +82,28 @@ function sendLead(){
 }
 
 </script>
+<script>
+document.getElementById("leadForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
 
+  const data = {
+    name: document.getElementById("name").value,
+    phone: document.getElementById("phone").value,
+    city: document.getElementById("city").value
+  };
+
+  const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+
+  document.getElementById("msg").innerText = result.message;
+});
+</script>
 </body>
 </html>
