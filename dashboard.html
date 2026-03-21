@@ -1,53 +1,109 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CRM Dashboard</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>VIVID URJA CRM</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    h2 { color: green; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px; border-bottom: 1px solid #ccc; }
+    select, input { padding: 5px; }
+    button { padding: 5px 10px; cursor: pointer; }
+  </style>
 </head>
 
-<body class="bg-gray-100 p-6">
+<body>
 
-<h1 class="text-2xl font-bold mb-4">VIVID URJA CRM 🚀</h1>
+<h2>🚀 VIVID URJA ADVANCE CRM</h2>
 
-<table class="w-full bg-white shadow rounded">
-  <thead class="bg-green-600 text-white">
+<input type="text" id="search" placeholder="Search name..." onkeyup="loadLeads()">
+
+<table>
+  <thead>
     <tr>
-      <th class="p-2">Name</th>
-      <th class="p-2">Phone</th>
-      <th class="p-2">Status</th>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>City</th>
+      <th>Status</th>
+      <th>Notes</th>
+      <th>Action</th>
     </tr>
   </thead>
-  <tbody id="leadsTable"></tbody>
+  <tbody id="data"></tbody>
 </table>
 
 <script>
+const API = "https://vivid-urja-saas.onrender.com/api/leads";
 
-// protect
-if(!localStorage.getItem("token")){
-  window.location.href = "/login.html"
+async function loadLeads() {
+  let res = await fetch(API);
+  let data = await res.json();
+
+  let search = document.getElementById("search").value.toLowerCase();
+
+  let html = "";
+
+  data.filter(l => l.name.toLowerCase().includes(search))
+      .forEach(l => {
+    html += `
+    <tr>
+      <td>${l.name}</td>
+      <td>
+        ${l.phone}
+        <br>
+        <a href="https://wa.me/91${l.phone}" target="_blank">📲 WhatsApp</a>
+      </td>
+      <td>${l.city}</td>
+      
+      <td>
+        <select onchange="updateLead('${l._id}', this.value)">
+          <option ${l.status=="New"?"selected":""}>New</option>
+          <option ${l.status=="Contacted"?"selected":""}>Contacted</option>
+          <option ${l.status=="Interested"?"selected":""}>Interested</option>
+          <option ${l.status=="Closed"?"selected":""}>Closed</option>
+        </select>
+      </td>
+
+      <td>
+        <input value="${l.notes || ""}" 
+        onchange="updateNotes('${l._id}', this.value)">
+      </td>
+
+      <td>
+        <button onclick="deleteLead('${l._id}')">❌ Delete</button>
+      </td>
+    </tr>
+    `;
+  });
+
+  document.getElementById("data").innerHTML = html;
 }
 
-// fetch leads
-async function loadLeads(){
-  const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads")
-  const data = await res.json()
-
-  const table = document.getElementById("leadsTable")
-  table.innerHTML = ""
-
-  data.forEach(lead => {
-    table.innerHTML += `
-      <tr class="border">
-        <td class="p-2">${lead.name}</td>
-        <td class="p-2">${lead.phone}</td>
-        <td class="p-2">${lead.status}</td>
-      </tr>
-    `
-  })
+// ✅ Update Status
+async function updateLead(id, status) {
+  await fetch(API + "/" + id, {
+    method: "PUT",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ status })
+  });
 }
 
-loadLeads()
+// ✅ Update Notes
+async function updateNotes(id, notes) {
+  await fetch(API + "/" + id, {
+    method: "PUT",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ notes })
+  });
+}
 
+// ✅ Delete
+async function deleteLead(id) {
+  await fetch(API + "/" + id, { method: "DELETE" });
+  loadLeads();
+}
+
+loadLeads();
 </script>
 
 </body>
