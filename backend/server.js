@@ -14,6 +14,17 @@ mongoose.connect(process.env.MONGO_URL, {
 .then(() => console.log("MongoDB Connected ✅"))
 .catch(err => console.log(err));
 
+// 🔐 LOGIN API
+app.post("/api/login", (req, res) => {
+  const { username, password } = req.body;
+
+  if (username === "admin" && password === "1234") {
+    res.json({ token: "secure123" });
+  } else {
+    res.status(401).json({ message: "Invalid Login ❌" });
+  }
+});
+
 // ✅ Schema
 const LeadSchema = new mongoose.Schema({
   name: String,
