@@ -1,69 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VIVID URJA</title>
 
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+<!-- THREE -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
 <style>
-body{background:#0f2027;color:white;font-family:Arial;text-align:center;}
-input,button{padding:10px;margin:5px;width:80%;}
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Segoe UI';
+background:#000;
+color:white;
+overflow-x:hidden;
+}
+
+/* NAV */
+.nav{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:space-between;
+padding:20px;
+z-index:10;
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(10px);
+}
+
+/* HERO */
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+/* GLASS CARD */
+.glass{
+background:rgba(255,255,255,0.08);
+backdrop-filter:blur(20px);
+padding:25px;
+border-radius:15px;
+box-shadow:0 0 25px rgba(0,255,200,0.2);
+}
+
+/* BUTTON */
+button{
+background:#00ffcc;
+color:black;
+padding:12px 25px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin-top:15px;
+}
+
+/* SECTION */
+.section{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:40px;
+}
+
+/* CANVAS */
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-1;
+}
 </style>
 </head>
 
 <body>
 
-<h1>⚡ VIVID URJA</h1>
-<p>₹0 बिजली बिल Solar</p>
+<!-- NAV -->
+<div class="nav">
+<h2>⚡ VIVID URJA</h2>
+<a href="login.html">Login</a>
+</div>
 
-<h3>Register</h3>
-<input id="rEmail" placeholder="Email">
-<input id="rPass" type="password" placeholder="Password">
-<button onclick="register()">Register</button>
+<!-- 3D BACKGROUND -->
+<canvas id="bg"></canvas>
 
-<h3>Login</h3>
-<input id="email" placeholder="Email">
-<input id="pass" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+<!-- HERO -->
+<div class="hero">
 
-<h3>Get Quote</h3>
-<input id="name" placeholder="Name">
-<input id="phone" placeholder="Phone">
-<input id="city" placeholder="City">
-<button onclick="lead()">Submit</button>
+<div class="glass">
+
+<h1 id="title">₹0 बिजली बिल ⚡</h1>
+<p>Future of Solar Energy</p>
+
+<button onclick="scrollNext()">Get Started</button>
+
+</div>
+
+</div>
+
+<!-- STORY SECTIONS -->
+<div class="section">Electricity Bill Problem 😩</div>
+<div class="section">Solar Solution ☀️</div>
+<div class="section">₹0 Bill Life 💰</div>
 
 <script>
-async function register(){
-await fetch("https://vivid-urja-saas.onrender.com/api/register",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email:rEmail.value,password:rPass.value})
-});
-alert("Registered");
+
+// 3D BACKGROUND
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById("bg")});
+
+renderer.setSize(innerWidth,innerHeight);
+
+const geometry=new THREE.TorusKnotGeometry(1,0.3,100,16);
+const material=new THREE.MeshBasicMaterial({color:0x00ffcc,wireframe:true});
+
+const mesh=new THREE.Mesh(geometry,material);
+scene.add(mesh);
+
+camera.position.z=3;
+
+function animate(){
+requestAnimationFrame(animate);
+mesh.rotation.x+=0.01;
+mesh.rotation.y+=0.01;
+renderer.render(scene,camera);
+}
+animate();
+
+// SCROLL
+function scrollNext(){
+window.scrollTo({top:window.innerHeight,behavior:"smooth"});
 }
 
-async function login(){
-let res=await fetch("https://vivid-urja-saas.onrender.com/api/login",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({email:email.value,password:pass.value})
-});
-let data=await res.json();
-localStorage.setItem("token",data.token);
-location="dashboard.html";
-}
+// GSAP
+gsap.from("#title",{y:-100,opacity:0,duration:1});
+gsap.from(".glass",{scale:0.8,opacity:0,duration:1});
 
-async function lead(){
-await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-name:name.value,
-phone:phone.value,
-city:city.value
-})
-});
-alert("Lead Saved");
-}
 </script>
 
 </body>
