@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>VIVID URJA Solar</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIVID URJA</title>
 
 <style>
 body{margin:0;font-family:Arial;background:#0f2027;color:white;}
@@ -28,12 +27,12 @@ max-width:400px;
 border-radius:10px;
 }
 
-input,button{
-width:100%;
-padding:10px;
-margin:10px 0;
-}
+input,button{width:100%;padding:10px;margin:10px 0;}
 
+.chat-btn{
+position:fixed;bottom:20px;left:20px;
+background:green;padding:15px;border-radius:50%;
+}
 </style>
 </head>
 
@@ -54,9 +53,7 @@ margin:10px 0;
 </div>
 
 <!-- CHAT -->
-<div onclick="toggleChat()" style="position:fixed;bottom:20px;left:20px;background:green;padding:15px;border-radius:50%;">
-💬
-</div>
+<div class="chat-btn" onclick="toggleChat()">💬</div>
 
 <div id="chatBox" style="display:none;position:fixed;bottom:80px;left:20px;background:white;color:black;padding:10px;width:250px;">
 <div id="messages"></div>
@@ -71,63 +68,39 @@ e.preventDefault();
 
 let data={name:name.value,phone:phone.value,city:city.value};
 
-await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+await fetch("https://YOUR_BACKEND_URL/api/leads",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify(data)
 });
 
-alert("Saved");
+window.open(https://wa.me/91${data.phone});
+alert("Lead Saved 🚀");
 });
 
-// CHAT
+// CHAT UI
 function toggleChat(){
 let box=document.getElementById("chatBox");
 box.style.display= box.style.display==="none"?"block":"none";
 }
 
-function send(){
+// AI CHAT
+async function send(){
 let input=document.getElementById("msg").value;
 let messages=document.getElementById("messages");
 
 messages.innerHTML+="<p>"+input+"</p>";
 
-let reply=getReply(input);
-
-messages.innerHTML+="<p>"+reply+"</p>";
-}
-
-// 🔥 FINAL AI FUNCTION (REPLACED)
-function getReply(msg){
-
-msg=msg.toLowerCase();
-
-if(/\d{10}/.test(msg)){
-fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+let res=await fetch("https://YOUR_BACKEND_URL/api/chat",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-name:"Chat User",
-phone:msg,
-city:"Unknown"
-})
+body:JSON.stringify({message:input})
 });
 
-window.open(https://wa.me/91${msg});
-
-return "Thanks! हम आपको contact करेंगे ✅";
+let data=await res.json();
+messages.innerHTML+="<p>"+data.reply+"</p>";
 }
 
-if(msg.includes("price")){
-return "₹80,000 से start होता है";
-}
-
-if(msg.includes("subsidy")){
-return "₹95,000 subsidy available है";
-}
-
-return "Please अपना mobile number भेजें 📞";
-}
 </script>
 
 </body>
