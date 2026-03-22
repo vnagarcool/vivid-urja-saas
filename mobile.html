@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+margin:0;
+font-family:'Segoe UI';
+background:#0f2027;
+color:white;
+}
+
+/* HEADER */
+.header{
+padding:15px;
+background:#000;
+text-align:center;
+}
+
+/* CARD */
+.card{
+background:#1c2b36;
+margin:10px;
+padding:15px;
+border-radius:12px;
+}
+
+/* BUTTON */
+.btn{
+background:#28a745;
+padding:12px;
+border-radius:10px;
+text-align:center;
+margin:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">⚡ VIVID URJA APP</div>
+
+<div class="card">
+<h3>Total Leads</h3>
+<p id="total">0</p>
+</div>
+
+<div class="card">
+<h3>Today Leads</h3>
+<p id="today">0</p>
+</div>
+
+<div class="btn" onclick="load()">Refresh</div>
+
+<script>
+async function load(){
+
+let res=await fetch("https://vivid-urja-saas.onrender.com/api/leads");
+let d=await res.json();
+
+document.getElementById("total").innerText=d.length;
+}
+load();
+</script>
+
+</body>
+</html>
