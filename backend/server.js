@@ -35,7 +35,8 @@ function auth(req,res,next){
 const Lead = mongoose.model("Lead",{
   name:String,
   phone:String,
-  city:String
+  city:String,
+  createdAt:{type:Date,default:Date.now}
 });
 
 // SAVE LEAD
@@ -47,8 +48,26 @@ app.post("/api/leads", async (req,res)=>{
 
 // GET LEADS
 app.get("/api/leads", auth, async (req,res)=>{
-  const data=await Lead.find();
+  const data=await Lead.find().sort({createdAt:-1});
   res.json(data);
+});
+
+// DELETE
+app.delete("/api/leads/:id", async (req,res)=>{
+  await Lead.findByIdAndDelete(req.params.id);
+  res.json({msg:"Deleted"});
+});
+
+// SIMPLE AI CHAT (upgrade later GPT)
+app.post("/api/chat", async (req,res)=>{
+  const msg=req.body.message.toLowerCase();
+
+  let reply="Please share your mobile number";
+
+  if(msg.includes("price")) reply="₹80,000 से start होता है";
+  if(msg.includes("subsidy")) reply="₹95,000 subsidy available है";
+
+  res.json({reply});
 });
 
 app.listen(10000,()=>console.log("Server Running 🚀"));
