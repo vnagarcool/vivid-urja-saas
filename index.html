@@ -68,7 +68,7 @@ e.preventDefault();
 
 let data={name:name.value,phone:phone.value,city:city.value};
 
-await fetch("https://YOUR_BACKEND_URL/api/leads",{
+await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify(data)
