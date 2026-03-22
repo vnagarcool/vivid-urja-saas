@@ -1,63 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>VIVID URJA CRM</title>
-
-<style>
-body {
-  margin:0;
-  font-family: Arial;
-  background:#f4f6f9;
-}
-
-.header {
-  background:#0f2027;
-  color:white;
-  padding:15px;
-  display:flex;
-  justify-content:space-between;
-}
-
-.container {
-  padding:20px;
-}
-
-.card {
-  background:white;
-  padding:15px;
-  border-radius:10px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
-  margin-bottom:20px;
-}
-
-table {
-  width:100%;
-  border-collapse:collapse;
-}
-
-th, td {
-  padding:10px;
-  border-bottom:1px solid #ddd;
-}
-
-th {
-  background:#28a745;
-  color:white;
-}
-
-button {
-  padding:6px 10px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
-}
-
-.delete {background:red;color:white;}
-.wa {background:#25D366;color:white;}
-</style>
-
-</head>
-
 <body>
 
 <script>
@@ -66,19 +8,10 @@ location="login.html";
 }
 </script>
 
-<div class="header">
-  <h2>⚡ VIVID URJA CRM</h2>
-  <button onclick="logout()">Logout</button>
-</div>
+<h2>CRM Dashboard</h2>
+<button onclick="logout()">Logout</button>
 
-<div class="container">
-
-<div class="card">
-  <h3>Total Leads: <span id="count"></span></h3>
-</div>
-
-<div class="card">
-<table>
+<table border="1">
 <thead>
 <tr>
 <th>Name</th>
@@ -91,9 +24,6 @@ location="login.html";
 
 <tbody id="data"></tbody>
 </table>
-</div>
-
-</div>
 
 <script>
 
@@ -103,38 +33,29 @@ location="login.html";
 }
 
 async function load(){
-
 let res=await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
 headers:{Authorization:localStorage.getItem("token")}
 });
 
 let d=await res.json();
 
-document.getElementById("count").innerText=d.length;
-
 let html="";
-
 d.forEach(l=>{
 html+=`
 <tr>
 <td>${l.name}</td>
-<td>${l.phone}</td>
-<td>${l.city}</td>
-<td style="color:${l.score>50?'green':'red'}">${l.score}</td>
 <td>
-<button class="wa" onclick="wa('${l.name}','${l.phone}')">WA</button>
-<button class="delete" onclick="del('${l._id}')">Delete</button>
+${l.phone}<br>
+<a href="https://wa.me/91${l.phone}">WA</a>
 </td>
+<td>${l.city}</td>
+<td>${l.score}</td>
+<td><button onclick="del('${l._id}')">Delete</button></td>
 </tr>
 `;
 });
 
 document.getElementById("data").innerHTML=html;
-
-}
-
-function wa(name,phone){
-window.open(https://wa.me/91${phone}?text=Hello ${name}, solar enquiry);
 }
 
 async function del(id){
@@ -143,7 +64,6 @@ load();
 }
 
 load();
-
 </script>
 
 </body>
