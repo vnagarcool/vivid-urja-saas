@@ -1,46 +1,13 @@
-<!DOCTYPE html>
-<html>
-<body>
+<input id="user"><input id="pass">
+<button onclick="login()">Login</button>
 
 <script>
-if(!localStorage.getItem("token")) location="login.html";
-</script>
-
-<h2>CRM Dashboard</h2>
-
-<table border="1">
-<tbody id="data"></tbody>
-</table>
-
-<script>
-async function load(){
-let res=await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-headers:{Authorization:"secure123"}
+async function login(){
+let r=await fetch("https://vivid-urja-saas.onrender.com/api/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({username:user.value,password:pass.value})
 });
-
-let d=await res.json();
-
-let html="";
-d.forEach(l=>{
-html+=`<tr>
-<td>${l.name}</td>
-<td>${l.phone}</td>
-<td><button onclick="del('${l._id}')">Delete</button></td>
-</tr>`;
-});
-
-document.getElementById("data").innerHTML=html;
+if(r.ok) location="dashboard.html";
 }
-
-async function del(id){
-await fetch("https://YOUR_BACKEND_URL/api/leads/"+id,{
-method:"DELETE"
-});
-load();
-}
-
-load();
 </script>
-
-</body>
-</html>
