@@ -1,29 +1,204 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VIVID URJA SaaS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Segoe UI';
+background:#0f2027;
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:220px;
+background:#111;
+height:100vh;
+padding:20px;
+position:fixed;
+}
+
+.sidebar h2{margin-bottom:20px;}
+.sidebar a{
+display:block;
+color:white;
+margin:10px 0;
+text-decoration:none;
+}
+
+/* MAIN */
+.main{
+margin-left:220px;
+padding:20px;
+width:100%;
+}
+
+/* HEADER */
+.header{
+display:flex;
+justify-content:space-between;
+margin-bottom:20px;
+}
+
+/* CARDS */
+.cards{
+display:flex;
+flex-wrap:wrap;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+padding:20px;
+margin:10px;
+border-radius:15px;
+width:200px;
+}
+
+/* TABLE */
+table{
+width:100%;
+margin-top:20px;
+background:#1c2b36;
+border-collapse:collapse;
+}
+
+td,th{
+padding:10px;
+border-bottom:1px solid #333;
+text-align:center;
+}
+
+/* BUTTON */
+button{
+padding:5px 10px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.wa{background:#25D366;}
+.del{background:red;color:white;}
+
+</style>
+</head>
+
 <body>
 
-<script>
-if(!localStorage.getItem("token")) location="login.html";
-</script>
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h2>⚡ VIVID URJA</h2>
+<a href="#">Dashboard</a>
+<a href="#">Leads</a>
+<a href="#">Analytics</a>
+<a href="#">Settings</a>
+</div>
 
-<h2>CRM</h2>
+<!-- MAIN -->
+<div class="main">
 
-<table border="1">
+<div class="header">
+<h2>Admin Dashboard</h2>
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+<div class="card">Total Leads<br><span id="total">0</span></div>
+<div class="card">Today Leads<br><span id="today">0</span></div>
+<div class="card">Conversion<br>65%</div>
+<div class="card">Revenue<br>₹2.5L</div>
+</div>
+
+<!-- CHART -->
+<canvas id="chart" height="100"></canvas>
+
+<!-- TABLE -->
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Phone</th>
+<th>City</th>
+<th>Action</th>
+</tr>
+</thead>
 <tbody id="data"></tbody>
 </table>
 
+</div>
+
 <script>
-fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-headers:{Authorization:"secure123"}
-})
-.then(res=>res.json())
-.then(d=>{
+
+async function load(){
+
+let res=await fetch("https://vivid-urja-saas.onrender.com/api/leads");
+let d=await res.json();
+
+document.getElementById("total").innerText=d.length;
+
+let today=0;
 let html="";
+let dates={};
+
 d.forEach(l=>{
-html+=<tr><td>${l.name}</td><td>${l.phone}</td></tr>;
+
+let date=new Date(l.createdAt).toDateString();
+let todayDate=new Date().toDateString();
+
+if(date===todayDate) today++;
+
+html+=`
+<tr>
+<td>${l.name}</td>
+<td>${l.phone}</td>
+<td>${l.city}</td>
+<td>
+<a href="https://wa.me/91${l.phone}" target="_blank">
+<button class="wa">WA</button>
+</a>
+<button class="del" onclick="del('${l._id}')">Delete</button>
+</td>
+</tr>
+`;
+
+let dte=new Date(l.createdAt).toLocaleDateString();
+dates[dte]=(dates[dte]||0)+1;
+
 });
+
 document.getElementById("data").innerHTML=html;
+document.getElementById("today").innerText=today;
+
+// chart
+new Chart(document.getElementById("chart"),{
+type:"line",
+data:{
+labels:Object.keys(dates),
+datasets:[{
+label:"Leads",
+data:Object.values(dates)
+}]
+}
 });
+}
+
+async function del(id){
+await fetch("https://vivid-urja-saas.onrender.com/api/leads/"+id,{
+method:"DELETE"
+});
+load();
+}
+
+load();
+
 </script>
 
 </body>
