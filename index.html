@@ -5,7 +5,7 @@
 <title>VIVID URJA Solar</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- AOS Animation -->
+<!-- Animation Library -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 <style>
@@ -18,6 +18,23 @@ body{
   overflow-x:hidden;
 }
 
+/* NAVBAR */
+.nav{
+  display:flex;
+  justify-content:space-between;
+  padding:15px 20px;
+  background:rgba(0,0,0,0.6);
+  position:fixed;
+  width:100%;
+  z-index:1000;
+}
+
+.nav a{
+  color:white;
+  margin:0 10px;
+  text-decoration:none;
+}
+
 /* HERO */
 .hero{
   height:100vh;
@@ -26,35 +43,36 @@ body{
   justify-content:center;
   align-items:center;
   text-align:center;
-  background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+
+  background:
+  linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
   url('https://images.unsplash.com/photo-1509395176047-4a66953fd231') center/cover;
+
 }
 
 .hero h1{
-  font-size:42px;
+  font-size:40px;
   animation:fadeIn 1.5s ease;
 }
 
 .hero p{
   margin:10px 0;
-  font-size:18px;
 }
 
-.cta{
+.btn{
   margin-top:20px;
   padding:12px 25px;
   background:#28a745;
   border:none;
   border-radius:8px;
   font-size:18px;
-  cursor:pointer;
 }
 
 /* FORM */
 .form-box{
   background:rgba(255,255,255,0.1);
   backdrop-filter:blur(10px);
-  margin:-60px auto 30px;
+  margin:-50px auto 30px;
   padding:25px;
   max-width:400px;
   border-radius:15px;
@@ -90,11 +108,11 @@ button{
   padding:20px;
   border-radius:15px;
   background:rgba(255,255,255,0.1);
-  transition:0.4s;
+  transition:0.3s;
 }
 
 .card:hover{
-  transform:translateY(-10px) scale(1.05);
+  transform:translateY(-10px);
 }
 
 /* GALLERY */
@@ -104,14 +122,10 @@ button{
 }
 
 .gallery img{
-  width:300px;
+  width:90%;
+  max-width:300px;
   margin:10px;
   border-radius:10px;
-  transition:0.4s;
-}
-
-.gallery img:hover{
-  transform:scale(1.1);
 }
 
 /* FOOTER */
@@ -119,6 +133,12 @@ button{
   text-align:center;
   padding:20px;
   background:#000;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+.hero h1{font-size:28px;}
+.card{width:90%;}
 }
 
 /* ANIMATION */
@@ -132,18 +152,28 @@ button{
 
 <body>
 
+<!-- NAVBAR -->
+<div class="nav">
+  <h3>⚡ VIVID URJA</h3>
+  <div>
+    <a href="#">Home</a>
+    <a href="#">Services</a>
+    <a href="#">Contact</a>
+  </div>
+</div>
+
 <!-- HERO -->
 <div class="hero">
   <h1>₹0 बिजली बिल ⚡</h1>
   <p>30 साल FREE बिजली</p>
-  <p style="color:yellow">₹95,000 Subsidy Available</p>
+  <p style="color:yellow">₹95,000 Subsidy</p>
 
-  <button class="cta" onclick="scrollToForm()">Get Free Quote</button>
+  <button class="btn" onclick="scrollToForm()">Get Free Quote</button>
 </div>
 
 <!-- FORM -->
 <div class="form-box" id="form" data-aos="fade-up">
-  <h3>Free Solar Consultation</h3>
+  <h3>Free Consultation</h3>
 
   <form id="leadForm">
     <input id="name" placeholder="Name" required>
@@ -156,13 +186,13 @@ button{
 <!-- FEATURES -->
 <div class="features">
   <div class="card" data-aos="zoom-in">⚡ ₹0 Bill</div>
-  <div class="card" data-aos="zoom-in">💰 Govt Subsidy</div>
+  <div class="card" data-aos="zoom-in">💰 Subsidy</div>
   <div class="card" data-aos="zoom-in">🔧 Warranty</div>
 </div>
 
-<!-- SOLAR GALLERY -->
+<!-- GALLERY -->
 <div class="gallery">
-  <h2>Our Solar Projects</h2>
+  <h2>Our Projects</h2>
 
   <img src="https://images.unsplash.com/photo-1581093588401-22f7b6a1a4d7" data-aos="fade-right">
   <img src="https://images.unsplash.com/photo-1592833159117-ac790c4c3e79" data-aos="fade-left">
@@ -174,7 +204,7 @@ button{
 </div>
 
 <!-- FLOAT BUTTONS -->
-<a href="tel:+918955551902" style="position:fixed;bottom:80px;right:20px;background:#007bff;padding:15px;border-radius:50%;">📞</a>
+<a href="tel:+918302095337" style="position:fixed;bottom:80px;right:20px;background:#007bff;padding:15px;border-radius:50%;">📞</a>
 <a href="https://wa.me/918302095337" style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:15px;border-radius:50%;">📲</a>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
@@ -182,12 +212,12 @@ button{
 <script>
 AOS.init();
 
-// Scroll
+// scroll
 function scrollToForm(){
 document.getElementById("form").scrollIntoView({behavior:"smooth"});
 }
 
-// Form Submit
+// form
 document.getElementById("leadForm").addEventListener("submit",async(e)=>{
 e.preventDefault();
 
