@@ -1,27 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VIVID URJA Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<h2>Dashboard</h2>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
 
+body{
+font-family:'Segoe UI';
+background:#0f2027;
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+width:240px;
+background:#111;
+height:100vh;
+padding:20px;
+position:fixed;
+}
+
+.sidebar h2{
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:block;
+color:#ccc;
+margin:15px 0;
+text-decoration:none;
+transition:0.3s;
+}
+
+.sidebar a:hover{
+color:#28a745;
+}
+
+/* MAIN */
+.main{
+margin-left:240px;
+width:100%;
+padding:20px;
+}
+
+/* TOPBAR */
+.topbar{
+display:flex;
+justify-content:space-between;
+margin-bottom:20px;
+}
+
+/* CARDS */
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+padding:20px;
+border-radius:15px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+/* TABLE */
+.table-box{
+margin-top:20px;
+overflow:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:#1c2b36;
+border-radius:10px;
+overflow:hidden;
+}
+
+th,td{
+padding:12px;
+text-align:center;
+}
+
+tr:nth-child(even){
+background:#16222a;
+}
+
+/* BUTTON */
+button{
+padding:6px 10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+.wa{background:#25D366;color:white;}
+.del{background:#ff4d4d;color:white;}
+
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h2>⚡ VIVID URJA</h2>
+<a href="#">Dashboard</a>
+<a href="#">Leads</a>
+<a href="#">Analytics</a>
+<a href="#">Settings</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="topbar">
+<h2>Dashboard</h2>
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+<div class="card">
+<h3>Total Leads</h3>
+<h1 id="total">0</h1>
+</div>
+
+<div class="card">
+<h3>Today Leads</h3>
+<h1 id="today">0</h1>
+</div>
+
+<div class="card">
+<h3>Conversion</h3>
+<h1>65%</h1>
+</div>
+
+<div class="card">
+<h3>Revenue</h3>
+<h1>₹2.5L</h1>
+</div>
+</div>
+
+<!-- CHART -->
+<div style="margin-top:30px;">
 <canvas id="chart"></canvas>
-<table border="1"><tbody id="data"></tbody></table>
+</div>
+
+<!-- TABLE -->
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Phone</th>
+<th>City</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="data"></tbody>
+</table>
+</div>
+
+</div>
 
 <script>
-fetch("https://vivid-urja-saas.onrender.com/api/leads")
-.then(r=>r.json())
-.then(d=>{
-let html="",dates={};
 
-d.forEach(l=>{
-html+=<tr><td>${l.name}</td><td>${l.phone}</td></tr>;
-let day=new Date(l.createdAt).toLocaleDateString();
-dates[day]=(dates[day]||0)+1;
+async function load(){
+
+let res = await fetch("https://vivid-urja-saas.onrender.com/api/leads");
+let leads = await res.json();
+
+document.getElementById("total").innerText = leads.length;
+
+let today = 0;
+let dates = {};
+let html = "";
+
+leads.forEach(l => {
+
+let d = new Date(l.createdAt);
+let todayDate = new Date();
+
+if(d.toDateString() === todayDate.toDateString()) today++;
+
+html += `
+<tr>
+<td>${l.name}</td>
+<td>${l.phone}</td>
+<td>${l.city || "-"}</td>
+<td>
+<a href="https://wa.me/91${l.phone}" target="_blank">
+<button class="wa">WhatsApp</button>
+</a>
+<button class="del" onclick="del('${l._id}')">Delete</button>
+</td>
+</tr>
+`;
+
+let key = d.toLocaleDateString();
+dates[key] = (dates[key] || 0) + 1;
+
 });
 
-data.innerHTML=html;
+document.getElementById("data").innerHTML = html;
+document.getElementById("today").innerText = today;
 
-new Chart(chart,{
+// CHART
+new Chart(document.getElementById("chart"),{
 type:"line",
-data:{labels:Object.keys(dates),datasets:[{data:Object.values(dates)}]}
+data:{
+labels:Object.keys(dates),
+datasets:[{
+label:"Leads",
+data:Object.values(dates),
+borderWidth:2
+}]
+}
 });
+
+}
+
+async function del(id){
+await fetch("https://vivid-urja-saas.onrender.com/api/leads/"+id,{
+method:"DELETE"
 });
+load();
+}
+
+load();
+
 </script>
+
+</body>
+</html>
