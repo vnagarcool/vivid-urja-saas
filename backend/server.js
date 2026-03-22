@@ -11,7 +11,7 @@ mongoose.connect(process.env.MONGO_URL)
 .then(()=>console.log("MongoDB Connected ✅"))
 .catch(err=>console.log(err));
 
-// Login API
+// LOGIN
 app.post("/api/login", (req,res)=>{
   const {username,password} = req.body;
 
@@ -22,7 +22,7 @@ app.post("/api/login", (req,res)=>{
   }
 });
 
-// Auth Middleware
+// AUTH
 function auth(req,res,next){
   if(req.headers.authorization==="secure123"){
     next();
@@ -31,43 +31,24 @@ function auth(req,res,next){
   }
 }
 
-// Schema
-const LeadSchema = new mongoose.Schema({
+// SCHEMA
+const Lead = mongoose.model("Lead",{
   name:String,
   phone:String,
-  city:String,
-  status:{type:String,default:"New"},
-  createdAt:{type:Date,default:Date.now}
+  city:String
 });
 
-const Lead = mongoose.model("Lead", LeadSchema);
-
-// AI Score
-function score(l){
-  let s=0;
-  if(l.city==="Jaipur") s+=30;
-  if(l.status==="Interested") s+=50;
-  return s;
-}
-
-// Add Lead
+// SAVE LEAD
 app.post("/api/leads", async (req,res)=>{
   const lead=new Lead(req.body);
   await lead.save();
   res.json({msg:"Saved"});
 });
 
-// Get Leads
+// GET LEADS
 app.get("/api/leads", auth, async (req,res)=>{
-  const leads=await Lead.find().sort({createdAt:-1});
-  const updated=leads.map(l=>({...l._doc,score:score(l)}));
-  res.json(updated);
-});
-
-// Delete
-app.delete("/api/leads/:id", async (req,res)=>{
-  await Lead.findByIdAndDelete(req.params.id);
-  res.json({msg:"Deleted"});
+  const data=await Lead.find();
+  res.json(data);
 });
 
 app.listen(10000,()=>console.log("Server Running 🚀"));
