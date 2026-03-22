@@ -1,12 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
+<title>VIVID URJA Solar SaaS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIVID URJA</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#0f2027;color:white;}
+*{margin:0;padding:0;box-sizing:border-box;}
 
+body{
+font-family:'Segoe UI';
+background:#0f2027;
+color:white;
+overflow-x:hidden;
+}
+
+/* NAV */
+.nav{
+position:fixed;
+width:100%;
+display:flex;
+justify-content:space-between;
+padding:15px;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(10px);
+z-index:1000;
+}
+
+.nav a{color:white;text-decoration:none;margin:10px;}
+
+/* HERO */
 .hero{
 height:100vh;
 display:flex;
@@ -15,36 +38,107 @@ justify-content:center;
 align-items:center;
 text-align:center;
 background:
-linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),
 url('https://images.unsplash.com/photo-1509395176047-4a66953fd231') center/cover;
+animation:fadeIn 2s;
 }
 
+.hero h1{font-size:48px;}
+.hero p{margin:15px 0;}
+
+.btn{
+padding:12px 25px;
+background:#28a745;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* FORM */
 .form-box{
-background:rgba(255,255,255,0.1);
-padding:20px;
-margin:-50px auto;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+padding:25px;
 max-width:400px;
-border-radius:10px;
+margin:-50px auto;
+border-radius:15px;
 }
 
-input,button{width:100%;padding:10px;margin:10px 0;}
+input,button{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:none;
+}
 
-.chat-btn{
-position:fixed;bottom:20px;left:20px;
-background:green;padding:15px;border-radius:50%;
+/* FEATURES */
+.section{
+padding:60px 20px;
+text-align:center;
+}
+
+.cards{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+padding:20px;
+margin:10px;
+border-radius:15px;
+width:250px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+}
+
+/* CTA */
+.cta{
+background:#28a745;
+padding:40px;
+text-align:center;
+}
+
+/* MOBILE FIX */
+@media(max-width:768px){
+.hero h1{font-size:30px;}
+.cards{flex-direction:column;align-items:center;}
+}
+
+/* ANIMATION */
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
 }
 </style>
 </head>
 
 <body>
 
-<div class="hero">
-<h1>₹0 बिजली बिल ⚡</h1>
-<p>Solar लगवाओ</p>
+<!-- NAV -->
+<div class="nav">
+<h3>⚡ VIVID URJA</h3>
+<div>
+<a href="#">Home</a>
+<a href="#form">Get Quote</a>
+</div>
 </div>
 
-<div class="form-box">
-<form id="form">
+<!-- HERO -->
+<div class="hero">
+<h1>₹0 बिजली बिल ⚡</h1>
+<p>30 साल FREE बिजली + ₹95,000 subsidy</p>
+<button class="btn" onclick="scrollToForm()">Get Free Consultation</button>
+</div>
+
+<!-- FORM -->
+<div class="form-box" id="form">
+<form id="leadForm">
 <input id="name" placeholder="Name">
 <input id="phone" placeholder="Phone">
 <input id="city" placeholder="City">
@@ -52,55 +146,42 @@ background:green;padding:15px;border-radius:50%;
 </form>
 </div>
 
-<!-- CHAT -->
-<div class="chat-btn" onclick="toggleChat()">💬</div>
+<!-- FEATURES -->
+<div class="section">
+<h2>Why Choose Us</h2>
+<div class="cards">
+<div class="card">₹0 Bill System</div>
+<div class="card">Govt Subsidy</div>
+<div class="card">30 Years Life</div>
+<div class="card">10 Year Warranty</div>
+</div>
+</div>
 
-<div id="chatBox" style="display:none;position:fixed;bottom:80px;left:20px;background:white;color:black;padding:10px;width:250px;">
-<div id="messages"></div>
-<input id="msg"><button onclick="send()">Send</button>
+<!-- CTA -->
+<div class="cta">
+<h2>Switch to Solar Today ☀️</h2>
 </div>
 
 <script>
+function scrollToForm(){
+document.getElementById("form").scrollIntoView({behavior:"smooth"});
+}
 
-// FORM
-document.getElementById("form").addEventListener("submit",async(e)=>{
+document.getElementById("leadForm").addEventListener("submit",async(e)=>{
 e.preventDefault();
-
-let data={name:name.value,phone:phone.value,city:city.value};
 
 await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify(data)
+body:JSON.stringify({
+name:name.value,
+phone:phone.value,
+city:city.value
+})
 });
 
-window.open(https://wa.me/91${data.phone});
-alert("Lead Saved 🚀");
+alert("Lead Submitted 🚀");
 });
-
-// CHAT UI
-function toggleChat(){
-let box=document.getElementById("chatBox");
-box.style.display= box.style.display==="none"?"block":"none";
-}
-
-// AI CHAT
-async function send(){
-let input=document.getElementById("msg").value;
-let messages=document.getElementById("messages");
-
-messages.innerHTML+="<p>"+input+"</p>";
-
-let res=await fetch("https://YOUR_BACKEND_URL/api/chat",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({message:input})
-});
-
-let data=await res.json();
-messages.innerHTML+="<p>"+data.reply+"</p>";
-}
-
 </script>
 
 </body>
