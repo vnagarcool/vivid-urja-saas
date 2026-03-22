@@ -5,7 +5,7 @@
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
 <style>
-body{background:#0f2027;color:white;font-family:Arial;}
+body{background:#0f2027;color:white;font-family:Arial;text-align:center;}
 .card{background:#1c2b36;padding:15px;margin:10px;border-radius:10px;}
 </style>
 </head>
@@ -13,8 +13,6 @@ body{background:#0f2027;color:white;font-family:Arial;}
 <body>
 
 <h2>🚀 Dashboard</h2>
-
-<input id="search" placeholder="Search..." onkeyup="filterData()">
 
 <div class="card">Total Leads: <span id="total"></span></div>
 
@@ -28,11 +26,7 @@ body{background:#0f2027;color:white;font-family:Arial;}
 
 const socket = io("https://vivid-urja-saas.onrender.com");
 
-socket.on("new-lead", ()=>{
-load();
-});
-
-let all=[];
+socket.on("new-lead", ()=>load());
 
 async function load(){
 
@@ -40,28 +34,21 @@ let res=await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
 headers:{Authorization:localStorage.getItem("token")}
 });
 
-all = await res.json();
-render(all);
-}
+let d=await res.json();
 
-function render(data){
-
-document.getElementById("total").innerText=data.length;
+document.getElementById("total").innerText=d.length;
 
 let html="";
 let dates={};
 
-data.forEach(l=>{
-html+=`<tr>
-<td>${l.name}</td>
-<td>${l.phone}</td>
-</tr>`;
+d.forEach(l=>{
+html+=<tr><td>${l.name}</td><td>${l.phone}</td></tr>;
 
-let d=new Date(l.createdAt).toLocaleDateString();
-dates[d]=(dates[d]||0)+1;
+let day=new Date(l.createdAt).toLocaleDateString();
+dates[day]=(dates[day]||0)+1;
 });
 
-document.getElementById("data").innerHTML=html;
+data.innerHTML=html;
 
 new Chart(chart,{
 type:"line",
@@ -69,14 +56,7 @@ data:{labels:Object.keys(dates),datasets:[{data:Object.values(dates)}]}
 });
 }
 
-function filterData(){
-let val=search.value.toLowerCase();
-render(all.filter(l=>l.name.toLowerCase().includes(val)));
-}
-
 load();
-setInterval(load,5000);
-
 </script>
 
 </body>
