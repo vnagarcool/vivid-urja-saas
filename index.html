@@ -1,166 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <title>VIVID URJA Solar</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-  margin:0;
-  font-family: Arial;
-  background:#f4f6f9;
-}
+body {margin:0;font-family:Arial;background:#f4f6f9;}
 
-/* HERO */
 .hero {
-  background: linear-gradient(135deg,#0f2027,#2c5364);
-  color:white;
-  text-align:center;
-  padding:60px 20px;
+background:linear-gradient(135deg,#0f2027,#2c5364);
+color:white;text-align:center;padding:50px 20px;
 }
 
-.hero h1 {
-  font-size:32px;
-}
-
-.hero p {
-  margin:10px 0;
-}
-
-/* FORM */
 .form-box {
-  background:white;
-  margin: -40px auto;
-  padding:25px;
-  width:90%;
-  max-width:400px;
-  border-radius:10px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+background:white;margin:-30px auto;padding:20px;
+max-width:400px;border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
-input {
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:6px;
-  border:1px solid #ccc;
-}
+input {width:100%;padding:10px;margin:10px 0;}
+button {width:100%;padding:10px;background:green;color:white;border:none;}
 
-button {
-  width:100%;
-  padding:12px;
-  background:#28a745;
-  color:white;
-  border:none;
-  border-radius:6px;
-  font-size:16px;
-  cursor:pointer;
-}
+.features {padding:30px;text-align:center;}
+.card {display:inline-block;width:250px;background:white;margin:10px;padding:20px;border-radius:10px;}
 
-button:hover {
-  background:#218838;
-}
-
-/* FEATURES */
-.features {
-  padding:40px 20px;
-  text-align:center;
-}
-
-.card {
-  background:white;
-  padding:20px;
-  margin:10px;
-  border-radius:10px;
-  display:inline-block;
-  width:250px;
-  box-shadow:0 5px 10px rgba(0,0,0,0.1);
-}
-
-/* FOOTER */
-.footer {
-  background:#0f2027;
-  color:white;
-  text-align:center;
-  padding:20px;
-}
+.footer {background:#0f2027;color:white;text-align:center;padding:20px;}
 </style>
 
 </head>
 
 <body>
 
-<!-- HERO -->
 <div class="hero">
-  <h1>₹0 बिजली बिल ⚡</h1>
-  <p>Solar लगवाओ – 30 साल तक Free बिजली</p>
-  <p>₹95,000 तक सरकारी सब्सिडी</p>
+<h1>₹0 बिजली बिल ⚡</h1>
+<p>Solar लगवाओ – Free बिजली</p>
+<img src="https://images.unsplash.com/photo-1509395176047-4a66953fd231" width="100%">
 </div>
 
-<!-- FORM -->
 <div class="form-box">
-  <h3>Free Solar Consultation</h3>
+<h3>Free Consultation</h3>
 
-  <form id="form">
-    <input id="name" placeholder="Your Name" required>
-    <input id="phone" placeholder="Phone Number" required>
-    <input id="city" placeholder="City" required>
-    <button>Get Free Quote 🚀</button>
-  </form>
+<form id="form">
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
+<input id="city" placeholder="City">
+<button>Submit</button>
+</form>
 </div>
 
-<!-- FEATURES -->
+<div class="form-box">
+<h3>Subsidy Calculator</h3>
+<input id="kw" placeholder="KW">
+<button onclick="calc()">Calculate</button>
+<h4 id="result"></h4>
+</div>
+
 <div class="features">
-  <h2>Why Choose VIVID URJA?</h2>
-
-  <div class="card">
-    <h3>⚡ ₹0 Bill</h3>
-    <p>Save electricity cost</p>
-  </div>
-
-  <div class="card">
-    <h3>💰 Subsidy</h3>
-    <p>Up to ₹95,000 Govt benefit</p>
-  </div>
-
-  <div class="card">
-    <h3>🔧 Warranty</h3>
-    <p>10 Years Product Warranty</p>
-  </div>
-
+<div class="card">₹0 Bill</div>
+<div class="card">₹95K Subsidy</div>
+<div class="card">10 Year Warranty</div>
 </div>
 
-<!-- FOOTER -->
-<div class="footer">
-  📞 Call Now: 8302095337  
-  <br> VIVID URJA Solar
-</div>
+<div class="footer">Call: 8302095337</div>
+
+<!-- CALL -->
+<a href="tel:+918302095337" style="position:fixed;bottom:80px;right:20px;background:#007bff;color:white;padding:12px;border-radius:50%;">📞</a>
+
+<!-- WA -->
+<a href="https://wa.me/918955551902" style="position:fixed;bottom:20px;right:20px;background:#25D366;color:white;padding:12px;border-radius:50%;">📲</a>
 
 <script>
-document.getElementById("form").addEventListener("submit", async (e)=>{
-  e.preventDefault();
+document.getElementById("form").addEventListener("submit",async(e)=>{
+e.preventDefault();
 
-  await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      name:name.value,
-      phone:phone.value,
-      city:city.value
-    })
-  });
+let data={name:name.value,phone:phone.value,city:city.value};
 
-  alert("✅ Thank you! Our team will contact you.");
-
-  name.value="";
-  phone.value="";
-  city.value="";
+await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
 });
+
+window.open(https://wa.me/91${data.phone}?text=Hello ${data.name}, Solar enquiry);
+
+alert("Lead Saved 🚀");
+});
+
+function calc(){
+let kw=document.getElementById("kw").value;
+let subsidy=kw*30000;
+let cost=kw*60000;
+document.getElementById("result").innerText=Final: ₹${cost-subsidy};
+}
 </script>
 
 </body>
 </html>
-<a href="https://wa.me/+918302095337" style="position:fixed;bottom:20px;right:20px;background:#25D366;color:white;padding:12px;border-radius:50%;">
-📲
-</a>
