@@ -6,32 +6,32 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// 🔥 MongoDB
+// MongoDB
 mongoose.connect(process.env.MONGO_URL)
 .then(()=>console.log("MongoDB Connected ✅"))
 .catch(err=>console.log(err));
 
-// 🔐 Dummy Login
-app.post("/api/login", (req, res) => {
-  const { username, password } = req.body;
+// Login API
+app.post("/api/login", (req,res)=>{
+  const {username,password} = req.body;
 
-  if (username === "admin" && password === "1234") {
-    res.json({ token: "secure123", user: "admin" });
+  if(username==="admin" && password==="1234"){
+    res.json({token:"secure123", user:"admin"});
   } else {
-    res.status(401).json({ message: "Invalid ❌" });
+    res.status(401).json({msg:"Invalid"});
   }
 });
 
-// 🛡️ Auth Middleware
+// Auth Middleware
 function auth(req,res,next){
   if(req.headers.authorization==="secure123"){
     next();
   } else {
-    res.status(401).json({message:"Unauthorized"});
+    res.status(401).json({msg:"Unauthorized"});
   }
 }
 
-// 📊 Schema
+// Schema
 const LeadSchema = new mongoose.Schema({
   name:String,
   phone:String,
@@ -42,7 +42,7 @@ const LeadSchema = new mongoose.Schema({
 
 const Lead = mongoose.model("Lead", LeadSchema);
 
-// 🤖 AI Score
+// AI Score
 function score(l){
   let s=0;
   if(l.city==="Jaipur") s+=30;
@@ -50,25 +50,24 @@ function score(l){
   return s;
 }
 
-// ➕ Add Lead
+// Add Lead
 app.post("/api/leads", async (req,res)=>{
   const lead=new Lead(req.body);
   await lead.save();
   res.json({msg:"Saved"});
 });
 
-// 📥 Get Leads
+// Get Leads
 app.get("/api/leads", auth, async (req,res)=>{
   const leads=await Lead.find().sort({createdAt:-1});
   const updated=leads.map(l=>({...l._doc,score:score(l)}));
   res.json(updated);
 });
 
-// ❌ Delete
+// Delete
 app.delete("/api/leads/:id", async (req,res)=>{
   await Lead.findByIdAndDelete(req.params.id);
   res.json({msg:"Deleted"});
 });
 
-// 🚀 Server
 app.listen(10000,()=>console.log("Server Running 🚀"));
