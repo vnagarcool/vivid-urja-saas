@@ -1,173 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>VIVID URJA Solar SaaS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIVID URJA</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-font-family:'Segoe UI';
-background:#0f2027;
-color:white;
-overflow-x:hidden;
-}
-
-/* NAV */
-.nav{
-position:fixed;
-width:100%;
-display:flex;
-justify-content:space-between;
-padding:15px;
-background:rgba(0,0,0,0.6);
-backdrop-filter:blur(10px);
-z-index:1000;
-}
-
-.nav a{color:white;text-decoration:none;margin:10px;}
-
-/* HERO */
-.hero{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-background:
-linear-gradient(rgba(0,0,0,0.7),rgba(0,0,0,0.7)),
-url('https://images.unsplash.com/photo-1509395176047-4a66953fd231') center/cover;
-animation:fadeIn 2s;
-}
-
-.hero h1{font-size:48px;}
-.hero p{margin:15px 0;}
-
-.btn{
-padding:12px 25px;
-background:#28a745;
-border:none;
-border-radius:8px;
-cursor:pointer;
-}
-
-/* FORM */
-.form-box{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(15px);
-padding:25px;
-max-width:400px;
-margin:-50px auto;
-border-radius:15px;
-}
-
-input,button{
-width:100%;
-padding:12px;
-margin:10px 0;
-border-radius:8px;
-border:none;
-}
-
-/* FEATURES */
-.section{
-padding:60px 20px;
-text-align:center;
-}
-
-.cards{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-}
-
-.card{
-background:rgba(255,255,255,0.05);
-padding:20px;
-margin:10px;
-border-radius:15px;
-width:250px;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-10px);
-}
-
-/* CTA */
-.cta{
-background:#28a745;
-padding:40px;
-text-align:center;
-}
-
-/* MOBILE FIX */
-@media(max-width:768px){
-.hero h1{font-size:30px;}
-.cards{flex-direction:column;align-items:center;}
-}
-
-/* ANIMATION */
-@keyframes fadeIn{
-from{opacity:0;}
-to{opacity:1;}
-}
+body{margin:0;background:#0f2027;color:white;font-family:Arial;}
+.hero{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
+.btn{background:#28a745;padding:10px 20px;border:none;}
 </style>
 </head>
 
 <body>
 
-<!-- NAV -->
-<div class="nav">
-<h3>⚡ VIVID URJA</h3>
-<div>
-<a href="#">Home</a>
-<a href="#form">Get Quote</a>
-</div>
-</div>
+<canvas id="bg"></canvas>
 
-<!-- HERO -->
 <div class="hero">
 <h1>₹0 बिजली बिल ⚡</h1>
-<p>30 साल FREE बिजली + ₹95,000 subsidy</p>
-<button class="btn" onclick="scrollToForm()">Get Free Consultation</button>
+<button class="btn">Get Solar</button>
 </div>
 
-<!-- FORM -->
-<div class="form-box" id="form">
-<form id="leadForm">
+<form id="form">
 <input id="name" placeholder="Name">
 <input id="phone" placeholder="Phone">
-<input id="city" placeholder="City">
 <button>Submit</button>
 </form>
-</div>
-
-<!-- FEATURES -->
-<div class="section">
-<h2>Why Choose Us</h2>
-<div class="cards">
-<div class="card">₹0 Bill System</div>
-<div class="card">Govt Subsidy</div>
-<div class="card">30 Years Life</div>
-<div class="card">10 Year Warranty</div>
-</div>
-</div>
-
-<!-- CTA -->
-<div class="cta">
-<h2>Switch to Solar Today ☀️</h2>
-</div>
 
 <script>
-function scrollToForm(){
-document.getElementById("form").scrollIntoView({behavior:"smooth"});
-}
+// 3D
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById("bg")});
+renderer.setSize(innerWidth,innerHeight);
 
-document.getElementById("leadForm").addEventListener("submit",async(e)=>{
+const geo = new THREE.BoxGeometry(3,2,0.2);
+const mat = new THREE.MeshBasicMaterial({color:0x00ffcc,wireframe:true});
+const cube = new THREE.Mesh(geo,mat);
+scene.add(cube);
+
+camera.position.z=5;
+
+function animate(){
+requestAnimationFrame(animate);
+cube.rotation.x+=0.01;
+cube.rotation.y+=0.01;
+renderer.render(scene,camera);
+}
+animate();
+
+// API
+document.getElementById("form").addEventListener("submit",async(e)=>{
 e.preventDefault();
 
 await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
@@ -175,12 +60,11 @@ method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
 name:name.value,
-phone:phone.value,
-city:city.value
+phone:phone.value
 })
 });
 
-alert("Lead Submitted 🚀");
+alert("Lead Saved");
 });
 </script>
 
