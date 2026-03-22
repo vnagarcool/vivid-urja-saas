@@ -1,13 +1,97 @@
-<h2>Mobile App</h2>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<button onclick="load()">Load</button>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<div id="total"></div>
+<style>
+body{
+margin:0;
+font-family:'Segoe UI';
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+}
+
+/* HEADER */
+.header{
+padding:15px;
+text-align:center;
+background:rgba(0,0,0,0.5);
+backdrop-filter:blur(10px);
+}
+
+/* CARD */
+.card{
+background:rgba(255,255,255,0.08);
+margin:10px;
+padding:15px;
+border-radius:15px;
+}
+
+/* LIST */
+.list{
+margin:10px;
+}
+
+.item{
+background:#1c2b36;
+padding:10px;
+margin:5px 0;
+border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">⚡ VIVID URJA APP</div>
+
+<div class="card">
+<h3>Total Leads</h3>
+<h1 id="total">0</h1>
+</div>
+
+<canvas id="chart"></canvas>
+
+<div class="list" id="data"></div>
 
 <script>
+
 async function load(){
-let r=await fetch("https://vivid-urja-saas.onrender.com/api/leads");
-let d=await r.json();
-total.innerText=d.length;
+
+let res = await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+headers:{Authorization:localStorage.getItem("token")}
+});
+
+let d = await res.json();
+
+document.getElementById("total").innerText = d.length;
+
+let html="";
+let dates={};
+
+d.forEach(l=>{
+html+=<div class="item">${l.name} - ${l.phone}</div>;
+
+let day=new Date(l.createdAt).toLocaleDateString();
+dates[day]=(dates[day]||0)+1;
+});
+
+document.getElementById("data").innerHTML=html;
+
+new Chart(document.getElementById("chart"),{
+type:"line",
+data:{
+labels:Object.keys(dates),
+datasets:[{data:Object.values(dates)}]
 }
+});
+}
+
+load();
+
 </script>
+
+</body>
+</html>
