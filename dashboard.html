@@ -3,67 +3,27 @@
 <body>
 
 <script>
-if(!localStorage.getItem("token")){
-location="login.html";
-}
+if(!localStorage.getItem("token")) location="login.html";
 </script>
 
-<h2>CRM Dashboard</h2>
-<button onclick="logout()">Logout</button>
+<h2>CRM</h2>
 
 <table border="1">
-<thead>
-<tr>
-<th>Name</th>
-<th>Phone</th>
-<th>City</th>
-<th>Score</th>
-<th>Action</th>
-</tr>
-</thead>
-
 <tbody id="data"></tbody>
 </table>
 
 <script>
-
-function logout(){
-localStorage.removeItem("token");
-location="login.html";
-}
-
-async function load(){
-let res=await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-headers:{Authorization:localStorage.getItem("token")}
-});
-
-let d=await res.json();
-
+fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+headers:{Authorization:"secure123"}
+})
+.then(res=>res.json())
+.then(d=>{
 let html="";
 d.forEach(l=>{
-html+=`
-<tr>
-<td>${l.name}</td>
-<td>
-${l.phone}<br>
-<a href="https://wa.me/91${l.phone}">WA</a>
-</td>
-<td>${l.city}</td>
-<td>${l.score}</td>
-<td><button onclick="del('${l._id}')">Delete</button></td>
-</tr>
-`;
+html+=<tr><td>${l.name}</td><td>${l.phone}</td></tr>;
 });
-
 document.getElementById("data").innerHTML=html;
-}
-
-async function del(id){
-await fetch("https://vivid-urja-saas.onrender.com/api/leads/"+id,{method:"DELETE"});
-load();
-}
-
-load();
+});
 </script>
 
 </body>
