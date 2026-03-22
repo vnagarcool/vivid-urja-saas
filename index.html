@@ -5,6 +5,9 @@
 <title>VIVID URJA Solar</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- AOS Animation -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 
@@ -12,47 +15,46 @@ body{
   font-family:'Segoe UI',sans-serif;
   background:#0f2027;
   color:white;
-}
-<div style="background:#0f2027;padding:10px;text-align:center;">
-<a href="index.html" style="color:white;margin:10px;">Home</a>
-<a href="about.html" style="color:white;margin:10px;">About</a>
-<a href="services.html" style="color:white;margin:10px;">Services</a>
-<a href="contact.html" style="color:white;margin:10px;">Contact</a>
-</div>
-/* HEADER */
-.header{
-  display:flex;
-  justify-content:space-between;
-  padding:15px 20px;
-  background:rgba(0,0,0,0.5);
-  position:sticky;
-  top:0;
+  overflow-x:hidden;
 }
 
 /* HERO */
 .hero{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
   text-align:center;
-  padding:70px 20px;
-  background:url('https://images.unsplash.com/photo-1509395176047-4a66953fd231') center/cover;
+  background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+  url('https://images.unsplash.com/photo-1509395176047-4a66953fd231') center/cover;
 }
 
 .hero h1{
-  font-size:38px;
-  background:rgba(0,0,0,0.5);
-  display:inline-block;
-  padding:10px 20px;
-  border-radius:10px;
+  font-size:42px;
+  animation:fadeIn 1.5s ease;
 }
 
 .hero p{
   margin:10px 0;
+  font-size:18px;
+}
+
+.cta{
+  margin-top:20px;
+  padding:12px 25px;
+  background:#28a745;
+  border:none;
+  border-radius:8px;
+  font-size:18px;
+  cursor:pointer;
 }
 
 /* FORM */
 .form-box{
   background:rgba(255,255,255,0.1);
   backdrop-filter:blur(10px);
-  margin:-40px auto 20px;
+  margin:-60px auto 30px;
   padding:25px;
   max-width:400px;
   border-radius:15px;
@@ -77,8 +79,8 @@ button{
 
 /* FEATURES */
 .features{
+  padding:50px 20px;
   text-align:center;
-  padding:40px 20px;
 }
 
 .card{
@@ -88,14 +90,28 @@ button{
   padding:20px;
   border-radius:15px;
   background:rgba(255,255,255,0.1);
+  transition:0.4s;
+}
+
+.card:hover{
+  transform:translateY(-10px) scale(1.05);
 }
 
 /* GALLERY */
+.gallery{
+  text-align:center;
+  padding:40px;
+}
+
 .gallery img{
-  width:90%;
-  max-width:300px;
+  width:300px;
   margin:10px;
   border-radius:10px;
+  transition:0.4s;
+}
+
+.gallery img:hover{
+  transform:scale(1.1);
 }
 
 /* FOOTER */
@@ -104,69 +120,75 @@ button{
   padding:20px;
   background:#000;
 }
+
+/* ANIMATION */
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(30px)}
+  to{opacity:1;transform:translateY(0)}
+}
 </style>
 
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <h3>⚡ VIVID URJA</h3>
-  <button onclick="toggle()">🌙</button>
-</div>
-
 <!-- HERO -->
 <div class="hero">
   <h1>₹0 बिजली बिल ⚡</h1>
   <p>30 साल FREE बिजली</p>
-  <p style="color:yellow">₹95,000 Subsidy</p>
+  <p style="color:yellow">₹95,000 Subsidy Available</p>
+
+  <button class="cta" onclick="scrollToForm()">Get Free Quote</button>
 </div>
 
 <!-- FORM -->
-<div class="form-box">
+<div class="form-box" id="form" data-aos="fade-up">
   <h3>Free Solar Consultation</h3>
 
-  <form id="form">
-    <input id="name" placeholder="Name">
-    <input id="phone" placeholder="Phone">
-    <input id="city" placeholder="City">
+  <form id="leadForm">
+    <input id="name" placeholder="Name" required>
+    <input id="phone" placeholder="Phone" required>
+    <input id="city" placeholder="City" required>
     <button>Submit</button>
   </form>
 </div>
 
 <!-- FEATURES -->
 <div class="features">
-  <div class="card">⚡ ₹0 Bill</div>
-  <div class="card">💰 Govt Subsidy</div>
-  <div class="card">🔧 Warranty</div>
+  <div class="card" data-aos="zoom-in">⚡ ₹0 Bill</div>
+  <div class="card" data-aos="zoom-in">💰 Govt Subsidy</div>
+  <div class="card" data-aos="zoom-in">🔧 Warranty</div>
 </div>
 
 <!-- SOLAR GALLERY -->
-<div class="gallery" style="text-align:center;">
-  <h2>Our Installations</h2>
-  <img src="https://images.unsplash.com/photo-1581093588401-22f7b6a1a4d7">
-  <img src="https://images.unsplash.com/photo-1592833159117-ac790c4c3e79">
+<div class="gallery">
+  <h2>Our Solar Projects</h2>
+
+  <img src="https://images.unsplash.com/photo-1581093588401-22f7b6a1a4d7" data-aos="fade-right">
+  <img src="https://images.unsplash.com/photo-1592833159117-ac790c4c3e79" data-aos="fade-left">
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
-📞 Call: 8302095337
+📞 Call: 8302095337 | VIVID URJA
 </div>
 
 <!-- FLOAT BUTTONS -->
 <a href="tel:+918955551902" style="position:fixed;bottom:80px;right:20px;background:#007bff;padding:15px;border-radius:50%;">📞</a>
 <a href="https://wa.me/918302095337" style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:15px;border-radius:50%;">📲</a>
 
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
 <script>
-// DARK MODE
-function toggle(){
-document.body.style.background =
-document.body.style.background === "white" ? "#0f2027" : "white";
+AOS.init();
+
+// Scroll
+function scrollToForm(){
+document.getElementById("form").scrollIntoView({behavior:"smooth"});
 }
 
-// FORM
-document.getElementById("form").addEventListener("submit",async(e)=>{
+// Form Submit
+document.getElementById("leadForm").addEventListener("submit",async(e)=>{
 e.preventDefault();
 
 let data={name:name.value,phone:phone.value,city:city.value};
