@@ -1,202 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>VIVID URJA Solar</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+body{margin:0;font-family:Arial;background:#0f2027;color:white;}
 
-body{
-  font-family:'Segoe UI',sans-serif;
-  background:#0f2027;
-  color:white;
-}
-
-/* NAVBAR */
-.nav{
-  display:flex;
-  justify-content:space-between;
-  padding:15px 20px;
-  background:rgba(0,0,0,0.6);
-  position:fixed;
-  width:100%;
-  z-index:1000;
-}
-
-.nav a{
-  color:white;
-  margin:0 10px;
-  text-decoration:none;
-}
-
-/* HERO */
 .hero{
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-
-  background:
-  linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
-  url('https://www.britannica.com/science/solar-energy') center/cover;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+background:
+linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+url('https://images.unsplash.com/photo-1509395176047-4a66953fd231') center/cover;
 }
 
-.hero h1{font-size:42px;}
-.hero p{margin:10px 0;}
-
-.btn{
-  padding:12px 25px;
-  background:#28a745;
-  border:none;
-  border-radius:8px;
-  font-size:18px;
+.form-box{
+background:rgba(255,255,255,0.1);
+padding:20px;
+margin:-50px auto;
+max-width:400px;
+border-radius:10px;
 }
 
-/* SECTION */
-.section{
-  padding:60px 20px;
-  text-align:center;
+input,button{
+width:100%;
+padding:10px;
+margin:10px 0;
 }
 
-/* CARDS */
-.card{
-  display:inline-block;
-  width:250px;
-  margin:10px;
-  padding:20px;
-  border-radius:15px;
-  background:rgba(255,255,255,0.1);
-  transition:0.3s;
-}
-
-.card:hover{transform:translateY(-10px);}
-
-/* GALLERY */
-.gallery img{
-  width:90%;
-  max-width:300px;
-  margin:10px;
-  border-radius:10px;
-}
-
-/* TESTIMONIAL */
-.testimonial{
-  max-width:600px;
-  margin:auto;
-  background:white;
-  color:black;
-  padding:20px;
-  border-radius:10px;
-}
-
-/* FOOTER */
-.footer{
-  text-align:center;
-  padding:20px;
-  background:#000;
-}
 </style>
-
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<div class="nav">
-<h3>⚡ VIVID URJA</h3>
-<div>
-<a href="#">Home</a>
-<a href="#">Services</a>
-<a href="#">Projects</a>
-<a href="#">Contact</a>
-</div>
-</div>
-
-<!-- HERO -->
 <div class="hero">
 <h1>₹0 बिजली बिल ⚡</h1>
-<p>Solar लगवाओ – 30 साल FREE बिजली</p>
-<p style="color:yellow">₹95,000 Subsidy</p>
-<button class="btn">Get Free Quote</button>
+<p>Solar लगवाओ</p>
 </div>
 
-<!-- SERVICES -->
-<div class="section">
-<h2>Our Services</h2>
-
-<div class="card">On-Grid System</div>
-<div class="card">Off-Grid System</div>
-<div class="card">Hybrid System</div>
-
+<div class="form-box">
+<form id="form">
+<input id="name" placeholder="Name">
+<input id="phone" placeholder="Phone">
+<input id="city" placeholder="City">
+<button>Submit</button>
+</form>
 </div>
 
-<!-- PROJECTS -->
-<div class="section">
-<h2>Our Projects</h2>
-
-<div class="gallery">
-
-</div>
-
-</div>
-
-<!-- TESTIMONIAL -->
-<div class="section">
-<h2>Customer Reviews ⭐</h2>
-
-<div class="testimonial">
-"₹4000 bill से ₹0 हो गया — amazing service!"
-<br><b>- Rahul, Kota</b>
-</div>
-
-</div>
-
-<!-- CONTACT -->
-<div class="section">
-<h2>Contact Us</h2>
-
-<iframe src="https://www.google.com/maps?q=Kota%20Rajasthan&output=embed"
-width="100%" height="250"></iframe>
-
-</div>
-<!-- CHAT BUTTON -->
-<div id="chatBtn" onclick="toggleChat()" 
-style="position:fixed;bottom:20px;left:20px;
-background:#28a745;color:white;padding:15px;
-border-radius:50%;cursor:pointer;">
+<!-- CHAT -->
+<div onclick="toggleChat()" style="position:fixed;bottom:20px;left:20px;background:green;padding:15px;border-radius:50%;">
 💬
 </div>
 
-<!-- CHAT BOX -->
-<div id="chatBox" style="
-display:none;
-position:fixed;
-bottom:80px;
-left:20px;
-width:300px;
-background:white;
-color:black;
-border-radius:10px;
-padding:10px;
-">
-
-<div id="messages" style="height:200px;overflow:auto;"></div>
-
-<input id="msg" placeholder="Type..." style="width:70%">
-<button onclick="send()">Send</button>
-
+<div id="chatBox" style="display:none;position:fixed;bottom:80px;left:20px;background:white;color:black;padding:10px;width:250px;">
+<div id="messages"></div>
+<input id="msg"><button onclick="send()">Send</button>
 </div>
-<!-- FOOTER -->
-<div class="footer">
-📞 Call: 8302095337 | VIVID URJA
-</div>
-<script>function toggleChat(){
+
+<script>
+
+// FORM
+document.getElementById("form").addEventListener("submit",async(e)=>{
+e.preventDefault();
+
+let data={name:name.value,phone:phone.value,city:city.value};
+
+await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(data)
+});
+
+alert("Saved");
+});
+
+// CHAT
+function toggleChat(){
 let box=document.getElementById("chatBox");
 box.style.display= box.style.display==="none"?"block":"none";
 }
@@ -205,41 +90,44 @@ function send(){
 let input=document.getElementById("msg").value;
 let messages=document.getElementById("messages");
 
-messages.innerHTML += "<p><b>You:</b> "+input+"</p>";
+messages.innerHTML+="<p>"+input+"</p>";
 
-let reply = getReply(input);
+let reply=getReply(input);
 
-messages.innerHTML += "<p><b>Bot:</b> "+reply+"</p>";
-
-document.getElementById("msg").value="";
+messages.innerHTML+="<p>"+reply+"</p>";
 }
 
+// 🔥 FINAL AI FUNCTION (REPLACED)
 function getReply(msg){
 
-msg = msg.toLowerCase();
+msg=msg.toLowerCase();
+
+if(/\d{10}/.test(msg)){
+fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+name:"Chat User",
+phone:msg,
+city:"Unknown"
+})
+});
+
+window.open(https://wa.me/91${msg});
+
+return "Thanks! हम आपको contact करेंगे ✅";
+}
 
 if(msg.includes("price")){
-return "Solar system ₹80,000 से start होता है (subsidy के बाद)";
+return "₹80,000 से start होता है";
 }
 
 if(msg.includes("subsidy")){
-return "आपको ₹95,000 तक subsidy मिल सकती है";
+return "₹95,000 subsidy available है";
 }
 
-if(msg.includes("install")){
-return "हम Kota, Jaipur, Ajmer में install करते हैं";
+return "Please अपना mobile number भेजें 📞";
 }
-
-if(msg.includes("call")){
-window.open("tel:+918302095337");
-return "Calling you...";
-}
-
-return "आप अपना mobile number share करें, हम आपको call करेंगे 📞";
-}<script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-AOS.init();
 </script>
 
 </body>
