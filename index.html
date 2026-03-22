@@ -196,7 +196,47 @@ padding:10px;
 <div class="footer">
 📞 Call: 8302095337 | VIVID URJA
 </div>
+<script>function toggleChat(){
+let box=document.getElementById("chatBox");
+box.style.display= box.style.display==="none"?"block":"none";
+}
 
+function send(){
+let input=document.getElementById("msg").value;
+let messages=document.getElementById("messages");
+
+messages.innerHTML += "<p><b>You:</b> "+input+"</p>";
+
+let reply = getReply(input);
+
+messages.innerHTML += "<p><b>Bot:</b> "+reply+"</p>";
+
+document.getElementById("msg").value="";
+}
+
+function getReply(msg){
+
+msg = msg.toLowerCase();
+
+if(msg.includes("price")){
+return "Solar system ₹80,000 से start होता है (subsidy के बाद)";
+}
+
+if(msg.includes("subsidy")){
+return "आपको ₹95,000 तक subsidy मिल सकती है";
+}
+
+if(msg.includes("install")){
+return "हम Kota, Jaipur, Ajmer में install करते हैं";
+}
+
+if(msg.includes("call")){
+window.open("tel:+919000000000");
+return "Calling you...";
+}
+
+return "आप अपना mobile number share करें, हम आपको call करेंगे 📞";
+}<script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 AOS.init();
