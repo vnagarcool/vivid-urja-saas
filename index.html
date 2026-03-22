@@ -1,35 +1,161 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <title>VIVID URJA Solar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#f4f6f9;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg,#0f2027,#2c5364);
+  color:white;
+  text-align:center;
+  padding:60px 20px;
+}
+
+.hero h1 {
+  font-size:32px;
+}
+
+.hero p {
+  margin:10px 0;
+}
+
+/* FORM */
+.form-box {
+  background:white;
+  margin: -40px auto;
+  padding:25px;
+  width:90%;
+  max-width:400px;
+  border-radius:10px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+
+input {
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+button {
+  width:100%;
+  padding:12px;
+  background:#28a745;
+  color:white;
+  border:none;
+  border-radius:6px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover {
+  background:#218838;
+}
+
+/* FEATURES */
+.features {
+  padding:40px 20px;
+  text-align:center;
+}
+
+.card {
+  background:white;
+  padding:20px;
+  margin:10px;
+  border-radius:10px;
+  display:inline-block;
+  width:250px;
+  box-shadow:0 5px 10px rgba(0,0,0,0.1);
+}
+
+/* FOOTER */
+.footer {
+  background:#0f2027;
+  color:white;
+  text-align:center;
+  padding:20px;
+}
+</style>
+
 </head>
 
 <body>
 
-<h1>₹0 बिजली बिल ⚡</h1>
+<!-- HERO -->
+<div class="hero">
+  <h1>₹0 बिजली बिल ⚡</h1>
+  <p>Solar लगवाओ – 30 साल तक Free बिजली</p>
+  <p>₹95,000 तक सरकारी सब्सिडी</p>
+</div>
 
-<form id="form">
-<input id="name" placeholder="Name"><br>
-<input id="phone" placeholder="Phone"><br>
-<input id="city" placeholder="City"><br>
-<button>Submit</button>
-</form>
+<!-- FORM -->
+<div class="form-box">
+  <h3>Free Solar Consultation</h3>
+
+  <form id="form">
+    <input id="name" placeholder="Your Name" required>
+    <input id="phone" placeholder="Phone Number" required>
+    <input id="city" placeholder="City" required>
+    <button>Get Free Quote 🚀</button>
+  </form>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+  <h2>Why Choose VIVID URJA?</h2>
+
+  <div class="card">
+    <h3>⚡ ₹0 Bill</h3>
+    <p>Save electricity cost</p>
+  </div>
+
+  <div class="card">
+    <h3>💰 Subsidy</h3>
+    <p>Up to ₹95,000 Govt benefit</p>
+  </div>
+
+  <div class="card">
+    <h3>🔧 Warranty</h3>
+    <p>10 Years Product Warranty</p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  📞 Call Now: 9000000000  
+  <br> VIVID URJA Solar
+</div>
 
 <script>
-document.getElementById("form").addEventListener("submit",async(e)=>{
-e.preventDefault();
+document.getElementById("form").addEventListener("submit", async (e)=>{
+  e.preventDefault();
 
-await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-name:name.value,
-phone:phone.value,
-city:city.value
-})
-});
+  await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      name:name.value,
+      phone:phone.value,
+      city:city.value
+    })
+  });
 
-alert("Lead Saved 🚀");
+  alert("✅ Thank you! Our team will contact you.");
+
+  name.value="";
+  phone.value="";
+  city.value="";
 });
 </script>
 
