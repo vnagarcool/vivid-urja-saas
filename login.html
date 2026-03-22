@@ -2,12 +2,16 @@
 <html>
 <body>
 
-<input id="user"><input id="pass">
+<h2>Login</h2>
+
+<input id="user" placeholder="Username"><br>
+<input id="pass" type="password"><br>
+
 <button onclick="login()">Login</button>
 
 <script>
 async function login(){
-let res=await fetch("https://vivid-urja-saas.onrender.com/api/login",{
+let res=await fetch("https://YOUR_BACKEND_URL/api/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
@@ -19,6 +23,8 @@ password:pass.value
 if(res.ok){
 localStorage.setItem("token","secure123");
 location="dashboard.html";
+}else{
+alert("Login Failed");
 }
 }
 </script>
