@@ -1,245 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>VIVID URJA Dashboard</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-
-body{
-font-family:'Segoe UI';
-background:#0f2027;
-color:white;
-display:flex;
-}
-
-/* SIDEBAR */
-.sidebar{
-width:240px;
-background:#111;
-height:100vh;
-padding:20px;
-position:fixed;
-}
-
-.sidebar h2{
-margin-bottom:30px;
-}
-
-.sidebar a{
-display:block;
-color:#ccc;
-margin:15px 0;
-text-decoration:none;
-transition:0.3s;
-}
-
-.sidebar a:hover{
-color:#28a745;
-}
-
-/* MAIN */
-.main{
-margin-left:240px;
-width:100%;
-padding:20px;
-}
-
-/* TOPBAR */
-.topbar{
-display:flex;
-justify-content:space-between;
-margin-bottom:20px;
-}
-
-/* CARDS */
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:15px;
-}
-
-.card{
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(10px);
-padding:20px;
-border-radius:15px;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-5px);
-}
-
-/* TABLE */
-.table-box{
-margin-top:20px;
-overflow:auto;
-}
-
-table{
-width:100%;
-border-collapse:collapse;
-background:#1c2b36;
-border-radius:10px;
-overflow:hidden;
-}
-
-th,td{
-padding:12px;
-text-align:center;
-}
-
-tr:nth-child(even){
-background:#16222a;
-}
-
-/* BUTTON */
-button{
-padding:6px 10px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-}
-
-.wa{background:#25D366;color:white;}
-.del{background:#ff4d4d;color:white;}
-
+body{background:#0f2027;color:white;font-family:Arial;}
+.card{background:#1c2b36;padding:15px;margin:10px;border-radius:10px;}
 </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar">
-<h2>⚡ VIVID URJA</h2>
-<a href="#">Dashboard</a>
-<a href="#">Leads</a>
-<a href="#">Analytics</a>
-<a href="#">Settings</a>
-</div>
+<h2>🚀 Dashboard</h2>
 
-<!-- MAIN -->
-<div class="main">
+<input id="search" placeholder="Search..." onkeyup="filterData()">
 
-<div class="topbar">
-<h2>Dashboard</h2>
-</div>
+<div class="card">Total Leads: <span id="total"></span></div>
 
-<!-- CARDS -->
-<div class="cards">
-<div class="card">
-<h3>Total Leads</h3>
-<h1 id="total">0</h1>
-</div>
-
-<div class="card">
-<h3>Today Leads</h3>
-<h1 id="today">0</h1>
-</div>
-
-<div class="card">
-<h3>Conversion</h3>
-<h1>65%</h1>
-</div>
-
-<div class="card">
-<h3>Revenue</h3>
-<h1>₹2.5L</h1>
-</div>
-</div>
-
-<!-- CHART -->
-<div style="margin-top:30px;">
 <canvas id="chart"></canvas>
-</div>
 
-<!-- TABLE -->
-<div class="table-box">
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Phone</th>
-<th>City</th>
-<th>Action</th>
-</tr>
-</thead>
+<table border="1">
 <tbody id="data"></tbody>
 </table>
-</div>
-
-</div>
 
 <script>
 
+const socket = io("https://vivid-urja-saas.onrender.com");
+
+socket.on("new-lead", ()=>{
+load();
+});
+
+let all=[];
+
 async function load(){
 
-let res = await fetch("https://vivid-urja-saas.onrender.com/api/leads");
-let leads = await res.json();
+let res=await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+headers:{Authorization:localStorage.getItem("token")}
+});
 
-document.getElementById("total").innerText = leads.length;
+all = await res.json();
+render(all);
+}
 
-let today = 0;
-let dates = {};
-let html = "";
+function render(data){
 
-leads.forEach(l => {
+document.getElementById("total").innerText=data.length;
 
-let d = new Date(l.createdAt);
-let todayDate = new Date();
+let html="";
+let dates={};
 
-if(d.toDateString() === todayDate.toDateString()) today++;
-
-html += `
-<tr>
+data.forEach(l=>{
+html+=`<tr>
 <td>${l.name}</td>
 <td>${l.phone}</td>
-<td>${l.city || "-"}</td>
-<td>
-<a href="https://wa.me/91${l.phone}" target="_blank">
-<button class="wa">WhatsApp</button>
-</a>
-<button class="del" onclick="del('${l._id}')">Delete</button>
-</td>
-</tr>
-`;
+</tr>`;
 
-let key = d.toLocaleDateString();
-dates[key] = (dates[key] || 0) + 1;
-
+let d=new Date(l.createdAt).toLocaleDateString();
+dates[d]=(dates[d]||0)+1;
 });
 
-document.getElementById("data").innerHTML = html;
-document.getElementById("today").innerText = today;
+document.getElementById("data").innerHTML=html;
 
-// CHART
-new Chart(document.getElementById("chart"),{
+new Chart(chart,{
 type:"line",
-data:{
-labels:Object.keys(dates),
-datasets:[{
-label:"Leads",
-data:Object.values(dates),
-borderWidth:2
-}]
-}
+data:{labels:Object.keys(dates),datasets:[{data:Object.values(dates)}]}
 });
-
 }
 
-async function del(id){
-await fetch("https://vivid-urja-saas.onrender.com/api/leads/"+id,{
-method:"DELETE"
-});
-load();
+function filterData(){
+let val=search.value.toLowerCase();
+render(all.filter(l=>l.name.toLowerCase().includes(val)));
 }
 
 load();
+setInterval(load,5000);
 
 </script>
 
