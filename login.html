@@ -1,13 +1,33 @@
-<input id="user"><input id="pass">
+<!DOCTYPE html>
+<html>
+<body style="background:#0f2027;color:white;text-align:center;font-family:Arial;">
+
+<h2>Login</h2>
+
+<input id="email" placeholder="Email"><br>
+<input id="pass" type="password" placeholder="Password"><br>
+
 <button onclick="login()">Login</button>
 
 <script>
 async function login(){
-let r=await fetch("https://vivid-urja-saas.onrender.com/api/login",{
+
+let res=await fetch("https://vivid-urja-saas.onrender.com/api/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({username:user.value,password:pass.value})
+body:JSON.stringify({
+email:email.value,
+password:pass.value
+})
 });
-if(r.ok) location="dashboard.html";
+
+let data=await res.json();
+
+localStorage.setItem("token",data.token);
+
+location="dashboard.html";
 }
 </script>
+
+</body>
+</html>
