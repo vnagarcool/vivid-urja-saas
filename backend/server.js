@@ -59,7 +59,7 @@ res.status(401).json({msg:"Unauthorized"});
 app.post("/api/leads", async (req,res)=>{
 const lead = await Lead.create(req.body);
 
-// 🔥 REAL-TIME
+// REAL-TIME
 io.emit("new-lead");
 
 res.json({msg:"Saved"});
