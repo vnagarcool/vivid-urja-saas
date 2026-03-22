@@ -12,13 +12,6 @@ body{
   font-family:'Segoe UI',sans-serif;
   background:#0f2027;
   color:white;
-  transition:0.3s;
-}
-
-/* DARK MODE */
-.light{
-  background:#f5f7fa;
-  color:#222;
 }
 
 /* HEADER */
@@ -26,8 +19,7 @@ body{
   display:flex;
   justify-content:space-between;
   padding:15px 20px;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(10px);
+  background:rgba(0,0,0,0.5);
   position:sticky;
   top:0;
 }
@@ -35,20 +27,20 @@ body{
 /* HERO */
 .hero{
   text-align:center;
-  padding:80px 20px;
-  animation:fadeIn 1s ease;
+  padding:70px 20px;
+  background:url('https://images.unsplash.com/photo-1509395176047-4a66953fd231') center/cover;
 }
 
 .hero h1{
   font-size:38px;
+  background:rgba(0,0,0,0.5);
+  display:inline-block;
+  padding:10px 20px;
+  border-radius:10px;
 }
 
-.hero img{
-  width:100%;
-  max-width:500px;
-  margin-top:20px;
-  border-radius:15px;
-  animation:float 3s infinite ease-in-out;
+.hero p{
+  margin:10px 0;
 }
 
 /* FORM */
@@ -59,7 +51,6 @@ body{
   padding:25px;
   max-width:400px;
   border-radius:15px;
-  animation:fadeInUp 1s;
 }
 
 input{
@@ -77,11 +68,9 @@ button{
   border:none;
   border-radius:10px;
   color:white;
-  font-size:16px;
-  cursor:pointer;
 }
 
-/* CARDS */
+/* FEATURES */
 .features{
   text-align:center;
   padding:40px 20px;
@@ -94,21 +83,14 @@ button{
   padding:20px;
   border-radius:15px;
   background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(10px);
-  transition:0.3s;
 }
 
-.card:hover{
-  transform:translateY(-10px);
-}
-
-/* CALC */
-.calc{
-  max-width:400px;
-  margin:20px auto;
-  padding:20px;
-  border-radius:15px;
-  background:rgba(255,255,255,0.1);
+/* GALLERY */
+.gallery img{
+  width:90%;
+  max-width:300px;
+  margin:10px;
+  border-radius:10px;
 }
 
 /* FOOTER */
@@ -116,22 +98,6 @@ button{
   text-align:center;
   padding:20px;
   background:#000;
-}
-
-/* ANIMATIONS */
-@keyframes fadeIn{
-  from{opacity:0}
-  to{opacity:1}
-}
-
-@keyframes fadeInUp{
-  from{opacity:0;transform:translateY(50px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-@keyframes float{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-10px)}
 }
 </style>
 
@@ -148,20 +114,18 @@ button{
 <!-- HERO -->
 <div class="hero">
   <h1>₹0 बिजली बिल ⚡</h1>
-  <p>Solar लगवाओ – 30 साल FREE बिजली</p>
-  <p style="color:yellow">₹95,000 Subsidy Available</p>
-
-  <img src="https://images.unsplash.com/photo-1509395176047-4a66953fd231">
+  <p>30 साल FREE बिजली</p>
+  <p style="color:yellow">₹95,000 Subsidy</p>
 </div>
 
 <!-- FORM -->
 <div class="form-box">
-  <h3>Free Consultation</h3>
+  <h3>Free Solar Consultation</h3>
 
   <form id="form">
-    <input id="name" placeholder="Name" required>
-    <input id="phone" placeholder="Phone" required>
-    <input id="city" placeholder="City" required>
+    <input id="name" placeholder="Name">
+    <input id="phone" placeholder="Phone">
+    <input id="city" placeholder="City">
     <button>Submit</button>
   </form>
 </div>
@@ -169,21 +133,20 @@ button{
 <!-- FEATURES -->
 <div class="features">
   <div class="card">⚡ ₹0 Bill</div>
-  <div class="card">💰 Subsidy</div>
+  <div class="card">💰 Govt Subsidy</div>
   <div class="card">🔧 Warranty</div>
 </div>
 
-<!-- CALCULATOR -->
-<div class="calc">
-  <h3>Calculator</h3>
-  <input id="kw" placeholder="KW">
-  <button onclick="calc()">Calculate</button>
-  <h4 id="result"></h4>
+<!-- SOLAR GALLERY -->
+<div class="gallery" style="text-align:center;">
+  <h2>Our Installations</h2>
+  <img src="https://images.unsplash.com/photo-1581093588401-22f7b6a1a4d7">
+  <img src="https://images.unsplash.com/photo-1592833159117-ac790c4c3e79">
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
-📞 Call: 8955551902
+📞 Call: 8302095337
 </div>
 
 <!-- FLOAT BUTTONS -->
@@ -193,7 +156,8 @@ button{
 <script>
 // DARK MODE
 function toggle(){
-document.body.classList.toggle("light");
+document.body.style.background =
+document.body.style.background === "white" ? "#0f2027" : "white";
 }
 
 // FORM
@@ -208,19 +172,10 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify(data)
 });
 
-// WhatsApp Auto
 window.open(https://wa.me/91${data.phone}?text=Hello ${data.name}, solar enquiry);
 
 alert("Lead Saved 🚀");
 });
-
-// CALCULATOR
-function calc(){
-let kw=document.getElementById("kw").value;
-let subsidy=kw*30000;
-let cost=kw*60000;
-document.getElementById("result").innerText=Final: ₹${cost-subsidy};
-}
 </script>
 
 </body>
