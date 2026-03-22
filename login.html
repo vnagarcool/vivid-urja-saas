@@ -2,31 +2,44 @@
 <html>
 <body>
 
-<h2>Login</h2>
+<script>
+if(!localStorage.getItem("token")) location="login.html";
+</script>
 
-<input id="user" placeholder="Username"><br>
-<input id="pass" type="password"><br>
+<h2>CRM Dashboard</h2>
 
-<button onclick="login()">Login</button>
+<table border="1">
+<tbody id="data"></tbody>
+</table>
 
 <script>
-async function login(){
-let res=await fetch("https://YOUR_BACKEND_URL/api/login",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-username:user.value,
-password:pass.value
-})
+async function load(){
+let res=await fetch("https://YOUR_BACKEND_URL/api/leads",{
+headers:{Authorization:"secure123"}
 });
 
-if(res.ok){
-localStorage.setItem("token","secure123");
-location="dashboard.html";
-}else{
-alert("Login Failed");
+let d=await res.json();
+
+let html="";
+d.forEach(l=>{
+html+=`<tr>
+<td>${l.name}</td>
+<td>${l.phone}</td>
+<td><button onclick="del('${l._id}')">Delete</button></td>
+</tr>`;
+});
+
+document.getElementById("data").innerHTML=html;
 }
+
+async function del(id){
+await fetch("https://YOUR_BACKEND_URL/api/leads/"+id,{
+method:"DELETE"
+});
+load();
 }
+
+load();
 </script>
 
 </body>
