@@ -5,7 +5,6 @@
 <title>VIVID URJA Solar</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Animation Library -->
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 <style>
@@ -15,7 +14,6 @@ body{
   font-family:'Segoe UI',sans-serif;
   background:#0f2027;
   color:white;
-  overflow-x:hidden;
 }
 
 /* NAVBAR */
@@ -47,20 +45,12 @@ body{
   background:
   linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
   url('https://images.unsplash.com/photo-1509395176047-4a66953fd231') center/cover;
-
 }
 
-.hero h1{
-  font-size:40px;
-  animation:fadeIn 1.5s ease;
-}
-
-.hero p{
-  margin:10px 0;
-}
+.hero h1{font-size:42px;}
+.hero p{margin:10px 0;}
 
 .btn{
-  margin-top:20px;
   padding:12px 25px;
   background:#28a745;
   border:none;
@@ -68,39 +58,13 @@ body{
   font-size:18px;
 }
 
-/* FORM */
-.form-box{
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(10px);
-  margin:-50px auto 30px;
-  padding:25px;
-  max-width:400px;
-  border-radius:15px;
-}
-
-input{
-  width:100%;
-  padding:12px;
-  margin:10px 0;
-  border-radius:10px;
-  border:none;
-}
-
-button{
-  width:100%;
-  padding:12px;
-  background:#28a745;
-  border:none;
-  border-radius:10px;
-  color:white;
-}
-
-/* FEATURES */
-.features{
-  padding:50px 20px;
+/* SECTION */
+.section{
+  padding:60px 20px;
   text-align:center;
 }
 
+/* CARDS */
 .card{
   display:inline-block;
   width:250px;
@@ -111,20 +75,23 @@ button{
   transition:0.3s;
 }
 
-.card:hover{
-  transform:translateY(-10px);
-}
+.card:hover{transform:translateY(-10px);}
 
 /* GALLERY */
-.gallery{
-  text-align:center;
-  padding:40px;
-}
-
 .gallery img{
   width:90%;
   max-width:300px;
   margin:10px;
+  border-radius:10px;
+}
+
+/* TESTIMONIAL */
+.testimonial{
+  max-width:600px;
+  margin:auto;
+  background:white;
+  color:black;
+  padding:20px;
   border-radius:10px;
 }
 
@@ -134,18 +101,6 @@ button{
   padding:20px;
   background:#000;
 }
-
-/* MOBILE */
-@media(max-width:768px){
-.hero h1{font-size:28px;}
-.card{width:90%;}
-}
-
-/* ANIMATION */
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(30px)}
-  to{opacity:1;transform:translateY(0)}
-}
 </style>
 
 </head>
@@ -154,48 +109,62 @@ button{
 
 <!-- NAVBAR -->
 <div class="nav">
-  <h3>⚡ VIVID URJA</h3>
-  <div>
-    <a href="#">Home</a>
-    <a href="#">Services</a>
-    <a href="#">Contact</a>
-  </div>
+<h3>⚡ VIVID URJA</h3>
+<div>
+<a href="#">Home</a>
+<a href="#">Services</a>
+<a href="#">Projects</a>
+<a href="#">Contact</a>
+</div>
 </div>
 
 <!-- HERO -->
 <div class="hero">
-  <h1>₹0 बिजली बिल ⚡</h1>
-  <p>30 साल FREE बिजली</p>
-  <p style="color:yellow">₹95,000 Subsidy</p>
-
-  <button class="btn" onclick="scrollToForm()">Get Free Quote</button>
+<h1>₹0 बिजली बिल ⚡</h1>
+<p>Solar लगवाओ – 30 साल FREE बिजली</p>
+<p style="color:yellow">₹95,000 Subsidy</p>
+<button class="btn">Get Free Quote</button>
 </div>
 
-<!-- FORM -->
-<div class="form-box" id="form" data-aos="fade-up">
-  <h3>Free Consultation</h3>
+<!-- SERVICES -->
+<div class="section">
+<h2>Our Services</h2>
 
-  <form id="leadForm">
-    <input id="name" placeholder="Name" required>
-    <input id="phone" placeholder="Phone" required>
-    <input id="city" placeholder="City" required>
-    <button>Submit</button>
-  </form>
+<div class="card">On-Grid System</div>
+<div class="card">Off-Grid System</div>
+<div class="card">Hybrid System</div>
+
 </div>
 
-<!-- FEATURES -->
-<div class="features">
-  <div class="card" data-aos="zoom-in">⚡ ₹0 Bill</div>
-  <div class="card" data-aos="zoom-in">💰 Subsidy</div>
-  <div class="card" data-aos="zoom-in">🔧 Warranty</div>
-</div>
+<!-- PROJECTS -->
+<div class="section">
+<h2>Our Projects</h2>
 
-<!-- GALLERY -->
 <div class="gallery">
-  <h2>Our Projects</h2>
+<img src="https://images.unsplash.com/photo-1581093588401-22f7b6a1a4d7">
+<img src="https://images.unsplash.com/photo-1592833159117-ac790c4c3e79">
+</div>
 
-  <img src="https://www.britannica.com/science/solar-energy" data-aos="fade-right">
-  <img src="https://share.google/Jm90IeZAwGwZa12Rm" data-aos="fade-left">
+</div>
+
+<!-- TESTIMONIAL -->
+<div class="section">
+<h2>Customer Reviews ⭐</h2>
+
+<div class="testimonial">
+"₹4000 bill से ₹0 हो गया — amazing service!"
+<br><b>- Rahul, Kota</b>
+</div>
+
+</div>
+
+<!-- CONTACT -->
+<div class="section">
+<h2>Contact Us</h2>
+
+<iframe src="https://www.google.com/maps?q=Kota%20Rajasthan&output=embed"
+width="100%" height="250"></iframe>
+
 </div>
 
 <!-- FOOTER -->
@@ -203,36 +172,9 @@ button{
 📞 Call: 8302095337 | VIVID URJA
 </div>
 
-<!-- FLOAT BUTTONS -->
-<a href="tel:+918302095337" style="position:fixed;bottom:80px;right:20px;background:#007bff;padding:15px;border-radius:50%;">📞</a>
-<a href="https://wa.me/918302095337" style="position:fixed;bottom:20px;right:20px;background:#25D366;padding:15px;border-radius:50%;">📲</a>
-
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
 <script>
 AOS.init();
-
-// scroll
-function scrollToForm(){
-document.getElementById("form").scrollIntoView({behavior:"smooth"});
-}
-
-// form
-document.getElementById("leadForm").addEventListener("submit",async(e)=>{
-e.preventDefault();
-
-let data={name:name.value,phone:phone.value,city:city.value};
-
-await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify(data)
-});
-
-window.open(https://wa.me/91${data.phone}?text=Hello ${data.name}, solar enquiry);
-
-alert("Lead Saved 🚀");
-});
 </script>
 
 </body>
