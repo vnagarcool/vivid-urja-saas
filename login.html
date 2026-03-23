@@ -1,14 +1,3 @@
-<!DOCTYPE html>
-<html>
-<body style="text-align:center;padding:50px">
-
-<h2>Login</h2>
-
-<input id="user" placeholder="Email"><br><br>
-<input id="pass" type="password" placeholder="Password"><br><br>
-
-<button onclick="login()">Login</button>
-
 <script>
 function login(){
 fetch("https://vivid-urja-saas.onrender.com/api/login",{
@@ -21,6 +10,11 @@ password:pass.value
 })
 .then(res=>res.json())
 .then(data=>{
+if(!data.token){
+alert("Login Failed");
+return;
+}
+
 localStorage.setItem("token",data.token);
 localStorage.setItem("role",data.role);
 
@@ -32,6 +26,3 @@ location="dealer-dashboard.html";
 });
 }
 </script>
-
-</body>
-</html>
