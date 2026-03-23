@@ -1,126 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Dashboard</title>
+  <meta charset="UTF-8">
+  <title>VIVID URJA Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body{
-background:#0f172a;
-color:white;
-font-family:sans-serif;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
 
-header{
-display:flex;
-justify-content:space-between;
-padding:20px;
-background:#020617;
-}
+    header {
+      padding: 20px;
+      background: #020617;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
 
-h1{font-size:22px;}
+    .container {
+      padding: 20px;
+    }
 
-button{
-background:#00c853;
-border:none;
-padding:8px 12px;
-color:white;
-cursor:pointer;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #020617;
+      border-radius: 10px;
+      overflow: hidden;
+    }
 
-.container{
-padding:20px;
-}
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #1e293b;
+      text-align: left;
+    }
 
-table{
-width:100%;
-margin-top:20px;
-border-collapse:collapse;
-}
+    th {
+      background: #1e293b;
+    }
 
-th,td{
-padding:10px;
-border-bottom:1px solid #334155;
-}
+    tr:hover {
+      background: #1e293b;
+    }
 
-.card{
-background:#020617;
-padding:20px;
-border-radius:10px;
-}
-</style>
+    .btn {
+      padding: 6px 10px;
+      background: red;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .loading {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-<h1>🚀 Admin Dashboard</h1>
-<button onclick="logout()">Logout</button>
+  ⚡ VIVID URJA ADMIN DASHBOARD
 </header>
 
 <div class="container">
 
-<div class="card">
-<h3>Total Leads</h3>
-<p id="count">0</p>
-</div>
+  <h2>📊 All Leads</h2>
 
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Phone</th>
-<th>City</th>
-<th>Status</th>
-</tr>
-</thead>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>City</th>
+        <th>Date</th>
+      </tr>
+    </thead>
 
-<tbody id="data"></tbody>
-</table>
+    <tbody id="leadsTable">
+      <tr><td colspan="4" class="loading">Loading...</td></tr>
+    </tbody>
+  </table>
 
 </div>
 
 <script>
-async function load(){
 
-let token = localStorage.getItem("token");
+async function loadLeads() {
+  try {
+    const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads");
+    const data = await res.json();
 
-if(!token){
-alert("Login Required");
-location="login.html";
-return;
+    const table = document.getElementById("leadsTable");
+    table.innerHTML = "";
+
+    if (data.length === 0) {
+      table.innerHTML = "<tr><td colspan='4'>No Leads Found</td></tr>";
+      return;
+    }
+
+    data.forEach(lead => {
+      const row = `
+        <tr>
+          <td>${lead.name}</td>
+          <td>${lead.phone}</td>
+          <td>${lead.city}</td>
+          <td>${new Date(lead.createdAt).toLocaleString()}</td>
+        </tr>
+      `;
+      table.innerHTML += row;
+    });
+
+  } catch (err) {
+    document.getElementById("leadsTable").innerHTML =
+      "<tr><td colspan='4'>Error loading data</td></tr>";
+  }
 }
 
-data.innerHTML="Loading...";
+// Load on page open
+loadLeads();
 
-let res = await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-headers:{Authorization:token}
-});
-
-let leads = await res.json();
-
-count.innerText = leads.length;
-
-data.innerHTML="";
-
-leads.forEach(l=>{
-data.innerHTML+=`
-<tr>
-<td>${l.name}</td>
-<td>${l.phone}</td>
-<td>${l.city}</td>
-<td>${l.status}</td>
-</tr>
-`;
-});
-
-}
-
-function logout(){
-localStorage.clear();
-location="login.html";
-}
-
-load();
 </script>
 
 </body>
