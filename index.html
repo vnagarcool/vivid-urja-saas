@@ -1,94 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width">
-<title>VIVID URJA</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<title>VIVID URJA ⚡</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body{
-margin:0;
-font-family:'Segoe UI';
-background:#000;
-color:white;
-text-align:center;
+  margin:0;
+  font-family:sans-serif;
+  background:url("https://images.unsplash.com/photo-1509395176047-4a66953fd231") no-repeat center/cover;
+  color:white;
 }
 
-canvas{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:-1;
+.overlay{
+  background:rgba(0,0,0,0.7);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
 }
 
-.glass{
-background:rgba(255,255,255,0.08);
-backdrop-filter:blur(15px);
-padding:20px;
-border-radius:15px;
-margin:50px auto;
-width:300px;
+.form{
+  background:white;
+  color:black;
+  padding:20px;
+  border-radius:12px;
 }
 
 input,button{
-width:100%;
-padding:10px;
-margin:5px;
-border:none;
-border-radius:8px;
+  width:100%;
+  margin:10px 0;
+  padding:10px;
 }
 
-button{background:#00ffcc;color:black;}
+button{
+  background:green;
+  color:white;
+  border:none;
+}
 </style>
 </head>
 
 <body>
 
-<h1>⚡ VIVID URJA</h1>
+<div class="overlay">
+<h1>⚡ Solar Rooftop System</h1>
+<p>₹0 Electricity Bill</p>
 
-<div class="glass">
-<h3>Get Solar Quote</h3>
-
+<div class="form">
 <input id="name" placeholder="Name">
 <input id="phone" placeholder="Phone">
 <input id="city" placeholder="City">
-
-<button onclick="lead()">Submit</button>
-
-<a href="login.html">Login</a>
+<button onclick="send()">Get Free Quote</button>
+</div>
 </div>
 
-<canvas id="bg"></canvas>
-
 <script>
-// 3D
-const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
-const renderer=new THREE.WebGLRenderer({canvas:bg});
-renderer.setSize(innerWidth,innerHeight);
-
-const cube=new THREE.Mesh(
-new THREE.BoxGeometry(2,2,0.2),
-new THREE.MeshBasicMaterial({color:0x00ffcc,wireframe:true})
-);
-
-scene.add(cube);
-camera.position.z=5;
-
-function animate(){
-requestAnimationFrame(animate);
-cube.rotation.x+=0.01;
-cube.rotation.y+=0.01;
-renderer.render(scene,camera);
-}
-animate();
-
-// API
-async function lead(){
-await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+function send(){
+fetch("https://vivid-urja-saas.onrender.com/api/leads",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
@@ -96,8 +66,8 @@ name:name.value,
 phone:phone.value,
 city:city.value
 })
-});
-alert("Lead Saved 🚀");
+})
+.then(()=>alert("Lead Saved 🚀"));
 }
 </script>
 
