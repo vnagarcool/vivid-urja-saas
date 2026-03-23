@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Dealer Panel 👤</h2>
+
+<table border="1" id="data"></table>
+
+<script>
+async function load(){
+
+let token = localStorage.getItem("token");
+
+let res = await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+headers:{Authorization:token}
+});
+
+let leads = await res.json();
+
+data.innerHTML="";
+
+leads.forEach(l=>{
+data.innerHTML+=`
+<tr>
+<td>${l.name}</td>
+<td>${l.phone}</td>
+<td>${l.city}</td>
+<td>${l.status}</td>
+</tr>
+`;
+});
+}
+
+load();
+</script>
+
+</body>
+</html>
