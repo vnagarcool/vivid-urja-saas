@@ -2,12 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const SECRET = "vivid_secret";
+// 🔐 ENV
+const SECRET = process.env.JWT_SECRET;
 
 // ✅ MongoDB
 mongoose.connect(process.env.MONGO_URI)
@@ -46,56 +48,94 @@ function auth(req,res,next){
   }
 }
 
-// 📝 REGISTER DEALER
+// 📝 REGISTER (SECURE)
 app.post("/api/register", async(req,res)=>{
-  const user = new User(req.body);
-  await user.save();
-  res.json({msg:"Dealer Created"});
+  try{
+    const hashed = await bcrypt.hash(req.body.password,10);
+
+    const user = new User({
+      name:req.body.name,
+      email:req.body.email,
+      password:hashed,
+      role:"dealer"
+    });
+
+    await user.save();
+    res.json({msg:"Dealer Created"});
+  }catch(err){
+    res.status(500).json({msg:"Error"});
+  }
 });
 
-// 🔐 LOGIN
+// 🔐 LOGIN (SECURE)
 app.post("/api/login", async(req,res)=>{
-  const {email,password} = req.body;
+  try{
+    const {email,password} = req.body;
 
-  const user = await User.findOne({email,password});
-  if(!user) return res.status(401).json({msg:"Invalid"});
+    const user = await User.findOne({email});
+    if(!user) return res.status(401).json({msg:"Invalid"});
 
-  const token = jwt.sign({
-    id:user._id,
-    role:user.role
-  }, SECRET);
+    const match = await bcrypt.compare(password,user.password);
+    if(!match) return res.status(401).json({msg:"Wrong password"});
 
-  res.json({token,role:user.role});
+    const token = jwt.sign({
+      id:user._id,
+      role:user.role
+    }, SECRET);
+
+    res.json({token,role:user.role});
+  }catch(err){
+    res.status(500).json({msg:"Error"});
+  }
 });
 
-// 📥 SAVE LEAD (PUBLIC FORM)
+// 📥 SAVE LEAD (AUTO ASSIGN RANDOM DEALER 🔥)
 app.post("/api/leads", async(req,res)=>{
-  const lead = new Lead({
-    name:req.body.name,
-    phone:req.body.phone,
-    city:req.body.city,
-    dealerId:"public"
-  });
+  try{
 
-  await lead.save();
+    const dealers = await User.find({role:"dealer"});
 
-  console.log("New Lead:",req.body.phone); // WhatsApp future
+    let assignedDealer = "public";
 
-  res.json({msg:"Saved"});
+    if(dealers.length > 0){
+      const random = dealers[Math.floor(Math.random()*dealers.length)];
+      assignedDealer = random._id;
+    }
+
+    const lead = new Lead({
+      name:req.body.name,
+      phone:req.body.phone,
+      city:req.body.city,
+      dealerId:assignedDealer
+    });
+
+    await lead.save();
+
+    console.log("New Lead:",req.body.phone);
+
+    res.json({msg:"Saved"});
+  }catch(err){
+    res.status(500).json({msg:"Error"});
+  }
 });
 
 // 📊 GET LEADS (ROLE BASED)
 app.get("/api/leads", auth, async(req,res)=>{
+  try{
 
-  let leads;
+    let leads;
 
-  if(req.user.role==="admin"){
-    leads = await Lead.find().sort({createdAt:-1});
-  }else{
-    leads = await Lead.find({dealerId:req.user.id});
+    if(req.user.role==="admin"){
+      leads = await Lead.find().sort({createdAt:-1});
+    }else{
+      leads = await Lead.find({dealerId:req.user.id});
+    }
+
+    res.json(leads);
+
+  }catch(err){
+    res.status(500).json({msg:"Error"});
   }
-
-  res.json(leads);
 });
 
 // 🚀 START
