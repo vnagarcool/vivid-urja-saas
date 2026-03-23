@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html>
-<body style="background:#0f2027;color:white;text-align:center;font-family:Arial;">
+<body style="text-align:center;padding:50px">
 
 <h2>Login</h2>
 
-<input id="email" placeholder="Email"><br>
-<input id="pass" type="password" placeholder="Password"><br>
+<input id="user" placeholder="Email"><br><br>
+<input id="pass" type="password" placeholder="Password"><br><br>
 
 <button onclick="login()">Login</button>
 
 <script>
-async function login(){
-
-let res=await fetch("https://vivid-urja-saas.onrender.com/api/login",{
+function login(){
+fetch("https://vivid-urja-saas.onrender.com/api/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-email:email.value,
+email:user.value,
 password:pass.value
 })
-});
-
-let data=await res.json();
-
+})
+.then(res=>res.json())
+.then(data=>{
 localStorage.setItem("token",data.token);
+localStorage.setItem("role",data.role);
 
+if(data.role==="admin"){
 location="dashboard.html";
+}else{
+location="dealer-dashboard.html";
+}
+});
 }
 </script>
 
