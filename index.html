@@ -1,37 +1,14 @@
-<!DOCTYPE html>
-<html>
-<body style="text-align:center;padding:50px">
-
-<h2>Login</h2>
-
-<input id="user" placeholder="Email"><br><br>
-<input id="pass" type="password" placeholder="Password"><br><br>
-
-<button onclick="login()">Login</button>
-
 <script>
-function login(){
-fetch("https://vivid-urja-saas.onrender.com/api/login",{
+function send(){
+fetch("https://vivid-urja-saas.onrender.com/api/leads",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-email:user.value,
-password:pass.value
+name:name.value,
+phone:phone.value,
+city:city.value
 })
 })
-.then(res=>res.json())
-.then(data=>{
-localStorage.setItem("token",data.token);
-localStorage.setItem("role",data.role);
-
-if(data.role==="admin"){
-location="dashboard.html";
-}else{
-location="dealer-dashboard.html";
-}
-});
+.then(()=>alert("Lead Saved 🚀"));
 }
 </script>
-
-</body>
-</html>
