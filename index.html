@@ -1,73 +1,35 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>VIVID URJA ⚡</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<body style="text-align:center;padding:50px">
 
-<style>
-body{
-  margin:0;
-  font-family:sans-serif;
-  background:url("https://images.unsplash.com/photo-1509395176047-4a66953fd231") no-repeat center/cover;
-  color:white;
-}
+<h2>Login</h2>
 
-.overlay{
-  background:rgba(0,0,0,0.7);
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-}
+<input id="user" placeholder="Email"><br><br>
+<input id="pass" type="password" placeholder="Password"><br><br>
 
-.form{
-  background:white;
-  color:black;
-  padding:20px;
-  border-radius:12px;
-}
-
-input,button{
-  width:100%;
-  margin:10px 0;
-  padding:10px;
-}
-
-button{
-  background:green;
-  color:white;
-  border:none;
-}
-</style>
-</head>
-
-<body>
-
-<div class="overlay">
-<h1>⚡ Solar Rooftop System</h1>
-<p>₹0 Electricity Bill</p>
-
-<div class="form">
-<input id="name" placeholder="Name">
-<input id="phone" placeholder="Phone">
-<input id="city" placeholder="City">
-<button onclick="send()">Get Free Quote</button>
-</div>
-</div>
+<button onclick="login()">Login</button>
 
 <script>
-function send(){
-fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+function login(){
+fetch("https://vivid-urja-saas.onrender.com/api/login",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
-name:name.value,
-phone:phone.value,
-city:city.value
+email:user.value,
+password:pass.value
 })
 })
-.then(()=>alert("Lead Saved 🚀"));
+.then(res=>res.json())
+.then(data=>{
+localStorage.setItem("token",data.token);
+localStorage.setItem("role",data.role);
+
+if(data.role==="admin"){
+location="dashboard.html";
+}else{
+location="dealer-dashboard.html";
+}
+});
 }
 </script>
 
