@@ -1,59 +1,41 @@
 <!DOCTYPE html>
 <html>
-<head>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-
-<style>
-body{background:#0f2027;color:white;font-family:Arial;text-align:center;}
-.card{background:#1c2b36;padding:15px;margin:10px;border-radius:10px;}
-</style>
-</head>
-
 <body>
 
-<h2>🚀 Dashboard</h2>
+<h1>Admin Dashboard 🚀</h1>
 
-<div class="card">Total Leads: <span id="total"></span></div>
+<button onclick="logout()">Logout</button>
 
-<canvas id="chart"></canvas>
-
-<table border="1">
-<tbody id="data"></tbody>
-</table>
+<table border="1" id="data"></table>
 
 <script>
-
-const socket = io("https://vivid-urja-saas.onrender.com");
-
-socket.on("new-lead", ()=>load());
-
 async function load(){
 
-let res=await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-headers:{Authorization:localStorage.getItem("token")}
+let token = localStorage.getItem("token");
+
+let res = await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
+headers:{Authorization:token}
 });
 
-let d=await res.json();
+let leads = await res.json();
 
-document.getElementById("total").innerText=d.length;
+data.innerHTML="";
 
-let html="";
-let dates={};
-
-d.forEach(l=>{
-html+=<tr><td>${l.name}</td><td>${l.phone}</td></tr>;
-
-let day=new Date(l.createdAt).toLocaleDateString();
-dates[day]=(dates[day]||0)+1;
+leads.forEach(l=>{
+data.innerHTML+=`
+<tr>
+<td>${l.name}</td>
+<td>${l.phone}</td>
+<td>${l.city}</td>
+<td>${l.status}</td>
+</tr>
+`;
 });
+}
 
-data.innerHTML=html;
-
-new Chart(chart,{
-type:"line",
-data:{labels:Object.keys(dates),datasets:[{data:Object.values(dates)}]}
-});
+function logout(){
+localStorage.clear();
+location="login.html";
 }
 
 load();
