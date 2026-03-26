@@ -1,143 +1,91 @@
-require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs");
+require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 // 🔐 ENV
-const SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || "supersecret123";
+const MONGO_URI = process.env.MONGO_URI;
 
-// ✅ MongoDB
-mongoose.connect(process.env.MONGO_URI)
-.then(()=>console.log("MongoDB Connected"))
-.catch(err=>console.log(err));
+// 🔗 MongoDB connect
+mongoose.connect(MONGO_URI)
+.then(() => console.log("MongoDB Connected ✅"))
+.catch(err => console.log(err));
 
-// 👤 USER MODEL
-const User = mongoose.model("User",{
-  name:String,
-  email:String,
-  password:String,
-  role:{type:String,default:"dealer"}
+// 📦 Models
+const Lead = mongoose.model("Lead", {
+  name: String,
+  phone: String,
+  city: String,
+  status: { type: String, default: "New" },
+  createdAt: { type: Date, default: Date.now }
 });
 
-// 📊 LEAD MODEL
-const Lead = mongoose.model("Lead",{
-  name:String,
-  phone:String,
-  city:String,
-  status:{type:String,default:"New"},
-  dealerId:String,
-  createdAt:{type:Date,default:Date.now}
+const User = mongoose.model("User", {
+  email: String,
+  password: String,
+  role: String
 });
 
-// 🔐 AUTH
-function auth(req,res,next){
-  const token = req.headers.authorization;
-  if(!token) return res.status(401).json({msg:"No token"});
+// 🔐 Middleware
+function auth(req, res, next) {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ msg: "No token" });
 
-  try{
-    const decoded = jwt.verify(token,SECRET);
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
-  }catch{
-    res.status(401).json({msg:"Invalid token"});
+  } catch {
+    res.status(401).json({ msg: "Invalid token" });
   }
 }
 
-// 📝 REGISTER (SECURE)
-app.post("/api/register", async(req,res)=>{
-  try{
-    const hashed = await bcrypt.hash(req.body.password,10);
+// 🚀 ROUTES
 
-    const user = new User({
-      name:req.body.name,
-      email:req.body.email,
-      password:hashed,
-      role:"dealer"
-    });
-
-    await user.save();
-    res.json({msg:"Dealer Created"});
-  }catch(err){
-    res.status(500).json({msg:"Error"});
-  }
+// Register
+app.post("/api/register", async (req, res) => {
+  const { email, password, role } = req.body;
+  const user = new User({ email, password, role });
+  await user.save();
+  res.json({ msg: "User created" });
 });
 
-// 🔐 LOGIN (SECURE)
-app.post("/api/login", async(req,res)=>{
-  try{
-    const {email,password} = req.body;
+// Login
+app.post("/api/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email, password });
 
-    const user = await User.findOne({email});
-    if(!user) return res.status(401).json({msg:"Invalid"});
+  if (!user) return res.status(400).json({ msg: "Invalid credentials" });
 
-    const match = await bcrypt.compare(password,user.password);
-    if(!match) return res.status(401).json({msg:"Wrong password"});
-
-    const token = jwt.sign({
-      id:user._id,
-      role:user.role
-    }, SECRET);
-
-    res.json({token,role:user.role});
-  }catch(err){
-    res.status(500).json({msg:"Error"});
-  }
+  const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET);
+  res.json({ token });
 });
 
-// 📥 SAVE LEAD (AUTO ASSIGN RANDOM DEALER 🔥)
-app.post("/api/leads", async(req,res)=>{
-  try{
-
-    const dealers = await User.find({role:"dealer"});
-
-    let assignedDealer = "public";
-
-    if(dealers.length > 0){
-      const random = dealers[Math.floor(Math.random()*dealers.length)];
-      assignedDealer = random._id;
-    }
-
-    const lead = new Lead({
-      name:req.body.name,
-      phone:req.body.phone,
-      city:req.body.city,
-      dealerId:assignedDealer
-    });
-
-    await lead.save();
-
-    console.log("New Lead:",req.body.phone);
-
-    res.json({msg:"Saved"});
-  }catch(err){
-    res.status(500).json({msg:"Error"});
-  }
+// ➕ Add Lead
+app.post("/api/leads", async (req, res) => {
+  const lead = new Lead(req.body);
+  await lead.save();
+  res.json(lead);
 });
 
-// 📊 GET LEADS (ROLE BASED)
-app.get("/api/leads", auth, async(req,res)=>{
-  try{
+// 📊 Get Leads (NO AUTH for now)
+app.get("/api/leads", async (req, res) => {
+  const leads = await Lead.find().sort({ createdAt: -1 });
+  res.json(leads);
+});
 
-    let leads;
-
-    if(req.user.role==="admin"){
-      leads = await Lead.find().sort({createdAt:-1});
-    }else{
-      leads = await Lead.find({dealerId:req.user.id});
-    }
-
-    res.json(leads);
-
-  }catch(err){
-    res.status(500).json({msg:"Error"});
-  }
+// ❌ Delete Lead
+app.delete("/api/leads/:id", async (req, res) => {
+  await Lead.findByIdAndDelete(req.params.id);
+  res.json({ msg: "Deleted" });
 });
 
 // 🚀 START
-app.listen(5000,()=>console.log("Server Running 🚀"));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log("Server Running 🚀"));
