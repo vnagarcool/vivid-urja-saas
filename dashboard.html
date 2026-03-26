@@ -1,123 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Dashboard</title>
-
-<style>
-body{
-background:#0f172a;
-color:white;
-font-family:sans-serif;
-}
-
-header{
-display:flex;
-justify-content:space-between;
-padding:20px;
-background:#020617;
-}
-
-h1{font-size:22px;}
-
-button{
-background:#00c853;
-border:none;
-padding:8px 12px;
-color:white;
-cursor:pointer;
-}
-
-.container{
-padding:20px;
-}
-
-table{
-width:100%;
-margin-top:20px;
-border-collapse:collapse;
-}
-
-th,td{
-padding:10px;
-border-bottom:1px solid #334155;
-}
-
-.card{
-background:#020617;
-padding:20px;
-border-radius:10px;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<header>
-<h1>🚀 Admin Dashboard</h1>
-<button onclick="logout()">Logout</button>
-</header>
+<div class="navbar">
+  <h2>🚀 Admin Dashboard</h2>
+  <button class="btn" onclick="logout()">Logout</button>
+</div>
 
 <div class="container">
 
-<div class="card">
-<h3>Total Leads</h3>
-<p id="count">0</p>
-</div>
+  <div class="card">
+    <h3>Total Leads: <span id="total">0</span></h3>
+  </div>
 
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Phone</th>
-<th>City</th>
-<th>Status</th>
-</tr>
-</thead>
-
-<tbody id="data"></tbody>
-</table>
+  <div class="glass">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="table"></tbody>
+    </table>
+  </div>
 
 </div>
 
 <script>
-async function load(){
+async function load() {
+  const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads");
+  const leads = await res.json();
 
-let token = localStorage.getItem("token");
+  document.getElementById("total").innerText = leads.length;
 
-if(!token){
-alert("Login Required");
-location="login.html";
-return;
+  let html = "";
+  leads.forEach(l => {
+    html += `
+      <tr>
+        <td>${l.name}</td>
+        <td>${l.phone}</td>
+        <td>${l.city}</td>
+        <td>${l.status}</td>
+        <td><button onclick="del('${l._id}')">❌</button></td>
+      </tr>
+    `;
+  });
+
+  document.getElementById("table").innerHTML = html;
 }
 
-data.innerHTML="Loading...";
-
-let res = await fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-headers:{Authorization:token}
-});
-
-let leads = await res.json();
-
-count.innerText = leads.length;
-
-data.innerHTML="";
-
-leads.forEach(l=>{
-data.innerHTML+=`
-<tr>
-<td>${l.name}</td>
-<td>${l.phone}</td>
-<td>${l.city}</td>
-<td>${l.status}</td>
-</tr>
-`;
-});
-
+async function del(id) {
+  await fetch("https://vivid-urja-saas.onrender.com/api/leads/" + id, {
+    method:"DELETE"
+  });
+  load();
 }
 
-function logout(){
-localStorage.clear();
-location="login.html";
+function logout() {
+  localStorage.removeItem("token");
+  window.location = "login.html";
 }
 
 load();
