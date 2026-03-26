@@ -1,0 +1,65 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: white;
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: rgba(0,0,0,0.3);
+}
+
+/* Buttons */
+.btn {
+  background: #00c6ff;
+  border: none;
+  padding: 10px 15px;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  color: #00c6ff;
+}
+
+tr {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Cards */
+.card {
+  padding: 20px;
+  margin: 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+}
+
+/* Layout */
+.container {
+  padding: 20px;
+}
