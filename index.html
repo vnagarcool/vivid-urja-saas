@@ -1,119 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>VIVID URJA ⚡</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
-
-body{
-background:url("https://images.unsplash.com/photo-1509395176047-4a66953fd231") no-repeat center/cover;
-color:white;
-}
-
-.overlay{
-background:rgba(0,0,0,0.7);
-min-height:100vh;
-}
-
-header{
-display:flex;
-justify-content:space-between;
-padding:20px;
-background:rgba(0,0,0,0.6);
-}
-
-.logo{
-font-size:20px;
-font-weight:bold;
-}
-
-.btn{
-background:#00c853;
-padding:10px 15px;
-color:white;
-border:none;
-cursor:pointer;
-}
-
-.hero{
-text-align:center;
-padding:80px 20px;
-animation:fade 2s;
-}
-
-@keyframes fade{
-from{opacity:0;transform:translateY(30px);}
-to{opacity:1;}
-}
-
-.form{
-background:white;
-color:black;
-padding:20px;
-border-radius:12px;
-max-width:320px;
-margin:auto;
-box-shadow:0 10px 30px rgba(0,0,0,0.3);
-}
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-}
-
-footer{
-text-align:center;
-padding:20px;
-background:black;
-margin-top:40px;
-}
-</style>
+  <title>VIVID URJA</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="overlay">
-
-<header>
-<div class="logo">⚡ VIVID URJA</div>
-<button class="btn" onclick="location='login.html'">Login</button>
-</header>
-
-<div class="hero">
-<h1>Go Solar & Save ₹0 Electricity Bill</h1>
-<p>Government Subsidy up to ₹95,000</p>
-
-<div class="form">
-<input id="name" placeholder="Name">
-<input id="phone" placeholder="Phone">
-<input id="city" placeholder="City">
-<button class="btn" onclick="send()">Get Free Quote</button>
+<div class="navbar">
+  <h2>⚡ VIVID URJA</h2>
+  <a href="login.html"><button class="btn">Login</button></a>
 </div>
 
-</div>
+<div class="container">
+  <div class="glass">
+    <h1>₹0 Electricity Bill ⚡</h1>
+    <p>Install Solar Rooftop & Save Money</p>
 
-<footer>
-© 2026 VIVID URJA | Solar Experts
-</footer>
-
+    <form id="leadForm">
+      <input placeholder="Name" id="name"><br><br>
+      <input placeholder="Phone" id="phone"><br><br>
+      <input placeholder="City" id="city"><br><br>
+      <button class="btn">Get Free Consultation</button>
+    </form>
+  </div>
 </div>
 
 <script>
-function send(){
-fetch("https://vivid-urja-saas.onrender.com/api/leads",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-name:name.value,
-phone:phone.value,
-city:city.value
-})
-})
-.then(()=>alert("Lead Submitted 🚀"));
-}
+document.getElementById("leadForm").onsubmit = async (e) => {
+  e.preventDefault();
+
+  await fetch("https://vivid-urja-saas.onrender.com/api/leads", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({
+      name: name.value,
+      phone: phone.value,
+      city: city.value
+    })
+  });
+
+  alert("Submitted ✅");
+};
 </script>
 
 </body>
