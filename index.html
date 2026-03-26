@@ -1,46 +1,37 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>VIVID URJA</title>
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="navbar">
-  <h2>⚡ VIVID URJA</h2>
-  <a href="login.html"><button class="btn">Login</button></a>
-</div>
-
 <div class="container">
-  <div class="glass">
-    <h1>₹0 Electricity Bill ⚡</h1>
-    <p>Install Solar Rooftop & Save Money</p>
+  <div class="glass" style="max-width:400px;margin:auto">
+    <h2>Login</h2>
 
-    <form id="leadForm">
-      <input placeholder="Name" id="name"><br><br>
-      <input placeholder="Phone" id="phone"><br><br>
-      <input placeholder="City" id="city"><br><br>
-      <button class="btn">Get Free Consultation</button>
-    </form>
+    <input id="email" placeholder="Email"><br><br>
+    <input id="password" placeholder="Password"><br><br>
+
+    <button class="btn" onclick="login()">Login</button>
   </div>
 </div>
 
 <script>
-document.getElementById("leadForm").onsubmit = async (e) => {
-  e.preventDefault();
-
-  await fetch("https://vivid-urja-saas.onrender.com/api/leads", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
+async function login() {
+  const res = await fetch("https://vivid-urja-saas.onrender.com/api/login", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
     body: JSON.stringify({
-      name: name.value,
-      phone: phone.value,
-      city: city.value
+      email: email.value,
+      password: password.value
     })
   });
 
-  alert("Submitted ✅");
-};
+  const data = await res.json();
+  localStorage.setItem("token", data.token);
+
+  window.location = "dashboard.html";
+}
 </script>
 
 </body>
