@@ -7,9 +7,7 @@
 <body>
 <div class="container">
 
-<h2>🚀 Admin Dashboard</h2>
-
-<div id="count"></div>
+<h2>👤 Dealer Panel</h2>
 
 <table border="1" width="100%">
 <thead>
@@ -17,7 +15,7 @@
 <th>Name</th>
 <th>Phone</th>
 <th>City</th>
-<th>Action</th>
+<th>Status</th>
 </tr>
 </thead>
 <tbody id="data"></tbody>
@@ -33,28 +31,17 @@ fetch("https://vivid-urja-saas.onrender.com/api/leads", {
 })
 .then(res=>res.json())
 .then(data=>{
-  document.getElementById("count").innerText = "Total Leads: "+data.length;
-
   data.forEach(l=>{
     document.getElementById("data").innerHTML += `
       <tr>
         <td>${l.name || "-"}</td>
         <td>${l.phone}</td>
         <td>${l.city}</td>
-        <td><button onclick="del('${l._id}')">❌</button></td>
+        <td>${l.status}</td>
       </tr>
     `;
   });
 });
-
-function del(id){
-  fetch("https://vivid-urja-saas.onrender.com/api/leads/"+id,{
-    method:"DELETE",
-    headers:{
-      Authorization:"Bearer "+localStorage.getItem("token")
-    }
-  }).then(()=> location.reload());
-}
 </script>
 
 </body>
