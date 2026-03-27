@@ -1,89 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
-
-<style>
-body{
-background:linear-gradient(135deg,#0f2027,#2c5364);
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-color:white;
-font-family:sans-serif;
-}
-
-.box{
-background:white;
-color:black;
-padding:30px;
-border-radius:12px;
-width:300px;
-text-align:center;
-}
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-}
-
-button{
-background:#00c853;
-color:white;
-border:none;
-padding:10px;
-width:100%;
-cursor:pointer;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+<div class="container">
 
-<div class="box">
-<h2>Admin / Dealer Login</h2>
+<h2>Login</h2>
 
-<input id="user" placeholder="Email">
-<input id="pass" type="password" placeholder="Password">
+<input id="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Password"><br><br>
 
 <button onclick="login()">Login</button>
 
-<p id="msg"></p>
 </div>
 
 <script>
-function login(){
+function login() {
+  fetch("https://vivid-urja-saas.onrender.com/api/login", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({
+      email: email.value,
+      password: password.value
+    })
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    if(data.token){
+      localStorage.setItem("token", data.token);
 
-msg.innerText="Loading...";
-
-fetch("https://vivid-urja-saas.onrender.com/api/login",{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-email:user.value,
-password:pass.value
-})
-})
-.then(res=>res.json())
-.then(data=>{
-
-if(!data.token){
-msg.innerText="Invalid Login ❌";
-return;
-}
-
-localStorage.setItem("token",data.token);
-localStorage.setItem("role",data.role);
-
-if(data.role==="admin"){
-location="dashboard.html";
-}else{
-location="dealer-dashboard.html";
-}
-
-});
+      if(data.role === "admin"){
+        window.location = "dashboard.html";
+      } else {
+        window.location = "dealer-dashboard.html";
+      }
+    } else {
+      alert("Invalid Login ❌");
+    }
+  });
 }
 </script>
 
