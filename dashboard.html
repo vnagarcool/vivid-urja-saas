@@ -3,72 +3,58 @@
 <head>
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-
-<div class="navbar">
-  <h2>🚀 Admin Dashboard</h2>
-  <button class="btn" onclick="logout()">Logout</button>
-</div>
-
 <div class="container">
 
-  <div class="card">
-    <h3>Total Leads: <span id="total">0</span></h3>
-  </div>
+<h2>🚀 Admin Dashboard</h2>
 
-  <div class="glass">
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>City</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="table"></tbody>
-    </table>
-  </div>
+<div id="count"></div>
+
+<table border="1" width="100%">
+<thead>
+<tr>
+<th>Name</th>
+<th>Phone</th>
+<th>City</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody id="data"></tbody>
+</table>
 
 </div>
 
 <script>
-async function load() {
-  const res = await fetch("https://vivid-urja-saas.onrender.com/api/leads");
-  const leads = await res.json();
+fetch("https://vivid-urja-saas.onrender.com/api/leads", {
+  headers:{
+    Authorization:"Bearer "+localStorage.getItem("token")
+  }
+})
+.then(res=>res.json())
+.then(data=>{
+  document.getElementById("count").innerText = "Total Leads: "+data.length;
 
-  document.getElementById("total").innerText = leads.length;
-
-  let html = "";
-  leads.forEach(l => {
-    html += `
+  data.forEach(l=>{
+    document.getElementById("data").innerHTML += `
       <tr>
-        <td>${l.name}</td>
+        <td>${l.name || "-"}</td>
         <td>${l.phone}</td>
         <td>${l.city}</td>
-        <td>${l.status}</td>
         <td><button onclick="del('${l._id}')">❌</button></td>
       </tr>
     `;
   });
+});
 
-  document.getElementById("table").innerHTML = html;
+function del(id){
+  fetch("https://vivid-urja-saas.onrender.com/api/leads/"+id,{
+    method:"DELETE",
+    headers:{
+      Authorization:"Bearer "+localStorage.getItem("token")
+    }
+  }).then(()=> location.reload());
 }
-
-async function del(id) {
-  await fetch("https://vivid-urja-saas.onrender.com/api/leads/" + id, {
-    method:"DELETE"
-  });
-  load();
-}
-
-function logout() {
-  localStorage.removeItem("token");
-  window.location = "login.html";
-}
-
-load();
 </script>
 
 </body>
