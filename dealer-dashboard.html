@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-<div class="container">
-
 <h2>👤 Dealer Panel</h2>
 
-<table border="1" width="100%">
+<input id="search" placeholder="Search..." onkeyup="loadData()">
+
+<table>
 <thead>
 <tr>
 <th>Name</th>
@@ -21,28 +14,33 @@
 <tbody id="data"></tbody>
 </table>
 
-</div>
-
 <script>
-fetch("https://vivid-urja-saas.onrender.com/api/leads", {
-  headers:{
-    Authorization:"Bearer "+localStorage.getItem("token")
-  }
+const API = "https://vivid-urja-saas.onrender.com";
+
+function loadData(){
+fetch(API+"/api/leads",{
+headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 })
 .then(res=>res.json())
 .then(data=>{
-  data.forEach(l=>{
-    document.getElementById("data").innerHTML += `
-      <tr>
-        <td>${l.name || "-"}</td>
-        <td>${l.phone}</td>
-        <td>${l.city}</td>
-        <td>${l.status}</td>
-      </tr>
-    `;
-  });
-});
-</script>
+let search=document.getElementById("search").value.toLowerCase();
 
-</body>
-</html>
+let html="";
+
+data.filter(l=>!search || l.phone.includes(search))
+.forEach(l=>{
+html+=`
+<tr>
+<td>${l.name || "-"}</td>
+<td>${l.phone}</td>
+<td>${l.city}</td>
+<td>${l.status}</td>
+</tr>`;
+});
+
+document.getElementById("data").innerHTML=html;
+});
+}
+
+loadData();
+</script>
