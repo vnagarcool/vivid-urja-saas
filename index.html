@@ -1,46 +1,218 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>VIVID URJA</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VIVID URJA | Solar Solutions</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* NAVBAR */
+nav{
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  position:fixed;
+  width:100%;
+  z-index:100;
+  background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(10px);
+}
+
+nav h2{
+  color:#00c6ff;
+}
+
+nav button{
+  padding:10px 15px;
+  background:#00c6ff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* HERO */
+.hero{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+}
+
+.hero h1{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+.hero p{
+  opacity:0.8;
+}
+
+/* GLASS CARD */
+.card{
+  margin-top:20px;
+  padding:25px;
+  border-radius:15px;
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
+  width:320px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  border:none;
+  border-radius:8px;
+}
+
+button.submit{
+  width:100%;
+  padding:12px;
+  background:#00c6ff;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+/* FEATURES */
+.features{
+  padding:50px 20px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+.feature{
+  width:250px;
+  margin:15px;
+  padding:20px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.1);
+}
+
+/* CTA */
+.cta{
+  text-align:center;
+  padding:40px;
+}
+
+.cta button{
+  padding:15px 30px;
+  background:#00c6ff;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* WHATSAPP FLOAT */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  padding:15px;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+</style>
 </head>
 
 <body>
-<div class="container">
 
-<h1>☀️ VIVID URJA SOLAR</h1>
+<!-- NAVBAR -->
+<nav>
+  <h2>⚡ VIVID URJA</h2>
+  <button onclick="window.location='login.html'">Login</button>
+</nav>
 
-<div class="card">
-<h3>Get Free Solar Quote</h3>
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <h1>₹0 Electricity Bill ⚡</h1>
+    <p>Install Solar Rooftop & Save Lakhs</p>
 
-<input id="name" placeholder="Name"><br><br>
-<input id="phone" placeholder="Phone"><br><br>
-<input id="city" placeholder="City"><br><br>
+    <!-- LEAD FORM -->
+    <div class="card">
+      <h3>Get Free Consultation</h3>
 
-<button onclick="submitLead()">Submit</button>
+      <input id="name" placeholder="Your Name">
+      <input id="phone" placeholder="Phone Number">
+      <input id="city" placeholder="City">
+
+      <button class="submit" onclick="submitLead()">Submit</button>
+    </div>
+
+  </div>
 </div>
 
+<!-- FEATURES -->
+<div class="features">
+  <div class="feature">💰 Save up to ₹50,000/year</div>
+  <div class="feature">⚡ 25+ Years Power</div>
+  <div class="feature">🏡 Govt Subsidy Available</div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Switch to Solar Today 🌞</h2>
+  <button onclick="submitLead()">Get Free Quote</button>
+</div>
+
+<!-- WHATSAPP -->
+<div class="whatsapp" onclick="whatsapp()">
+  💬
 </div>
 
 <script>
-function submitLead() {
-  const token = localStorage.getItem("token");
 
-  fetch("https://vivid-urja-saas.onrender.com/api/leads", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": "Bearer " + token
+const API="https://vivid-urja-saas.onrender.com";
+
+// SUBMIT LEAD
+function submitLead(){
+
+  fetch(API+"/api/leads",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Bearer "+localStorage.getItem("token")
     },
-    body: JSON.stringify({
-      name: document.getElementById("name").value,
-      phone: document.getElementById("phone").value,
-      city: document.getElementById("city").value
+    body:JSON.stringify({
+      name:document.getElementById("name").value,
+      phone:document.getElementById("phone").value,
+      city:document.getElementById("city").value
     })
   })
   .then(res=>res.json())
-  .then(()=> alert("Lead Submitted ✅"));
+  .then(()=>{
+    alert("Lead Submitted 🚀");
+  });
+
 }
+
+// WHATSAPP
+function whatsapp(){
+  window.open("https://wa.me/919828712999");
+}
+
 </script>
 
 </body>
