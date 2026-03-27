@@ -3,165 +3,201 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VIVID URJA 3D House</title>
+<title>VIVID URJA | Ultra Solar UI</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet">
 
 <style>
+
+*{margin:0;padding:0;box-sizing:border-box;font-family:Poppins;}
+
 body{
-  margin:0;
-  font-family:Poppins;
   background:#0a0f1c;
   color:white;
-  overflow:hidden;
+  overflow-x:hidden;
 }
 
-canvas{
+/* 🌌 BACKGROUND ANIMATION */
+.bg{
   position:fixed;
-  top:0;
-  left:0;
+  width:100%;
+  height:100%;
+  background:radial-gradient(circle at 20% 20%,#00c6ff33,transparent),
+             radial-gradient(circle at 80% 80%,#00ffcc33,transparent);
+  animation:move 8s infinite alternate;
   z-index:-1;
 }
 
-/* UI */
-.container{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  text-align:center;
+@keyframes move{
+  0%{transform:translate(0,0)}
+  100%{transform:translate(-50px,-50px)}
 }
 
-h1{
-  font-size:45px;
+/* NAV */
+nav{
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  backdrop-filter:blur(12px);
+}
+
+nav h2{
   background:linear-gradient(90deg,#00c6ff,#00ffcc);
   -webkit-background-clip:text;
   color:transparent;
 }
 
-.card{
-  margin-top:20px;
-  padding:20px;
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(15px);
-  border-radius:15px;
-}
-
-input{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border:none;
-  border-radius:8px;
-}
-
-button{
-  padding:12px;
-  width:100%;
+nav button{
+  padding:10px 15px;
   background:linear-gradient(90deg,#00c6ff,#00ffcc);
   border:none;
   border-radius:10px;
   cursor:pointer;
 }
+
+/* HERO */
+.hero{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
+
+.hero h1{
+  font-size:50px;
+  background:linear-gradient(90deg,#00c6ff,#00ffcc);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.hero p{
+  opacity:0.7;
+  margin:10px 0 20px;
+}
+
+/* GLASS CARD */
+.card{
+  padding:25px;
+  border-radius:15px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(20px);
+  box-shadow:0 0 20px #00c6ff33;
+  width:320px;
+  margin:auto;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:none;
+  border-radius:10px;
+}
+
+button.submit{
+  width:100%;
+  padding:12px;
+  background:linear-gradient(90deg,#00c6ff,#00ffcc);
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* FEATURES */
+.features{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  padding:50px 20px;
+}
+
+.feature{
+  margin:15px;
+  padding:20px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.05);
+  width:250px;
+  transition:0.3s;
+}
+
+.feature:hover{
+  transform:translateY(-10px);
+  box-shadow:0 0 20px #00c6ff55;
+}
+
+/* FLOATING CTA */
+.cta{
+  text-align:center;
+  padding:40px;
+}
+
+.cta button{
+  padding:15px 30px;
+  background:linear-gradient(90deg,#00c6ff,#00ffcc);
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+}
+
+/* WHATSAPP */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  padding:15px;
+  border-radius:50%;
+  cursor:pointer;
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>3D Solar House Experience 🏠⚡</h1>
+<div class="bg"></div>
 
-  <div class="card">
-    <input id="name" placeholder="Name">
-    <input id="phone" placeholder="Phone">
-    <input id="city" placeholder="City">
-    <button onclick="submitLead()">Get Solar Quote 🚀</button>
+<nav>
+  <h2>⚡ VIVID URJA</h2>
+  <button onclick="location.href='login.html'">Login</button>
+</nav>
+
+<div class="hero">
+  <div>
+    <h1>₹0 Electricity Bill</h1>
+    <p>Switch to Solar & Save ₹50,000/year</p>
+
+    <div class="card">
+      <h3>Free Solar Consultation</h3>
+
+      <input id="name" placeholder="Name">
+      <input id="phone" placeholder="Phone">
+      <input id="city" placeholder="City">
+
+      <button class="submit" onclick="submitLead()">Get Quote 🚀</button>
+    </div>
   </div>
 </div>
 
+<div class="features">
+  <div class="feature">⚡ 25+ Years Power</div>
+  <div class="feature">💰 Govt Subsidy</div>
+  <div class="feature">🏡 Free Installation</div>
+</div>
+
+<div class="cta">
+  <h2>Start Saving Today 🌞</h2>
+  <button onclick="submitLead()">Get Free Quote</button>
+</div>
+
+<div class="whatsapp" onclick="wa()">💬</div>
+
 <script>
 
-// SCENE
-const scene = new THREE.Scene();
-
-// CAMERA
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-
-// RENDERER
-const renderer = new THREE.WebGLRenderer({ alpha:true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-// LIGHT
-const light = new THREE.PointLight(0xffffff, 2);
-light.position.set(5,5,5);
-scene.add(light);
-
-// FLOOR
-const floor = new THREE.Mesh(
-  new THREE.PlaneGeometry(20,20),
-  new THREE.MeshStandardMaterial({ color:0x111111 })
-);
-floor.rotation.x = -Math.PI/2;
-scene.add(floor);
-
-// HOUSE BASE
-const house = new THREE.Mesh(
-  new THREE.BoxGeometry(2,1.5,2),
-  new THREE.MeshStandardMaterial({ color:0xffffff })
-);
-scene.add(house);
-
-// ROOF
-const roof = new THREE.Mesh(
-  new THREE.ConeGeometry(1.7,1,4),
-  new THREE.MeshStandardMaterial({ color:0x444444 })
-);
-roof.position.y = 1.2;
-roof.rotation.y = Math.PI / 4;
-scene.add(roof);
-
-// SOLAR PANEL
-const panel = new THREE.Mesh(
-  new THREE.BoxGeometry(1.5,0.05,1),
-  new THREE.MeshStandardMaterial({
-    color:0x001f3f,
-    metalness:0.8,
-    roughness:0.2
-  })
-);
-panel.position.set(0,1.3,0);
-panel.rotation.x = -0.5;
-scene.add(panel);
-
-// CAMERA POSITION
-camera.position.z = 6;
-
-// ANIMATION
-function animate(){
-  requestAnimationFrame(animate);
-
-  house.rotation.y += 0.002;
-  roof.rotation.y += 0.002;
-  panel.rotation.y += 0.002;
-
-  renderer.render(scene, camera);
-}
-animate();
-
-// MOUSE CONTROL
-document.addEventListener("mousemove", e=>{
-  house.rotation.y = e.clientX * 0.001;
-  roof.rotation.y = e.clientX * 0.001;
-  panel.rotation.y = e.clientX * 0.001;
-});
-
-// API
 const API="https://vivid-urja-saas.onrender.com";
 
-// LEAD
 function submitLead(){
 fetch(API+"/api/leads",{
 method:"POST",
@@ -177,6 +213,10 @@ city:city.value
 })
 .then(res=>res.json())
 .then(()=>alert("Lead Submitted 🚀"));
+}
+
+function wa(){
+window.open("https://wa.me/919828712999");
 }
 
 </script>
