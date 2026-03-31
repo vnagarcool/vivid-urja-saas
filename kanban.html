@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CRM Kanban</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial;
+background:#0f2027;
+color:white;
+}
+
+/* Layout */
+.container{
+display:flex;
+gap:20px;
+padding:20px;
+overflow-x:auto;
+}
+
+/* Columns */
+.column{
+min-width:250px;
+background:#1c2b36;
+padding:10px;
+border-radius:10px;
+}
+
+.column h3{
+text-align:center;
+}
+
+/* Card */
+.card{
+background:#2c5364;
+padding:10px;
+margin:10px 0;
+border-radius:8px;
+cursor:grab;
+}
+
+.hot{border-left:5px solid red;}
+.cold{border-left:5px solid blue;}
+.new{border-left:5px solid green;}
+
+button{
+margin-top:5px;
+padding:5px;
+border:none;
+background:#00c6ff;
+border-radius:5px;
+cursor:pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2 style="padding:20px;">🚀 Lead Pipeline</h2>
+
+<div class="container">
+
+<div class="column" ondrop="drop(event,'New')" ondragover="allowDrop(event)">
+<h3>🟢 New</h3>
+<div id="New"></div>
+</div>
+
+<div class="column" ondrop="drop(event,'Hot')" ondragover="allowDrop(event)">
+<h3>🔥 Hot</h3>
+<div id="Hot"></div>
+</div>
+
+<div class="column" ondrop="drop(event,'Cold')" ondragover="allowDrop(event)">
+<h3>❄ Cold</h3>
+<div id="Cold"></div>
+</div>
+
+<div class="column" ondrop="drop(event,'Closed')" ondragover="allowDrop(event)">
+<h3>✅ Closed</h3>
+<div id="Closed"></div>
+</div>
+
+</div>
+
+<script>
+
+const API="https://vivid-urja-saas.onrender.com";
+
+function allowDrop(ev){
+ev.preventDefault();
+}
+
+function drag(ev){
+ev.dataTransfer.setData("id",ev.target.id);
+}
+
+function drop(ev,status){
+ev.preventDefault();
+let id=ev.dataTransfer.getData("id");
+
+fetch(API+"/api/leads/"+id,{
+method:"PUT",
+headers:{
+"Content-Type":"application/json",
+Authorization:"Bearer "+localStorage.getItem("token")
+},
+body:JSON.stringify({status})
+}).then(load);
+}
+
+function load(){
+
+fetch(API+"/api/leads",{
+headers:{Authorization:"Bearer "+localStorage.getItem("token")}
+})
+.then(res=>res.json())
+.then(data=>{
+
+["New","Hot","Cold","Closed"].forEach(s=>{
+document.getElementById(s).innerHTML="";
+});
+
+data.forEach(l=>{
+
+let div=document.createElement("div");
+div.className="card "+l.status.toLowerCase();
+div.id=l._id;
+div.draggable=true;
+div.ondragstart=drag;
+
+div.innerHTML=`
+<b>${l.name||"No Name"}</b><br>
+📞 ${l.phone}<br>
+
+<button onclick="wa('${l.phone}')">WhatsApp</button>
+`;
+
+document.getElementById(l.status).appendChild(div);
+
+});
+
+});
+}
+
+function wa(phone){
+window.open("https://wa.me/"+phone);
+}
+
+load();
+
+</script>
+
+</body>
+</html>
