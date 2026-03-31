@@ -2,10 +2,11 @@
 <html>
 <head>
 <title>VIVID URJA</title>
+<link rel="manifest" href="manifest.json">
 </head>
 <body>
 
-<h2>Solar Lead Form</h2>
+<h2>Solar Lead Form ☀️</h2>
 
 <input id="name" placeholder="Name"><br>
 <input id="phone" placeholder="Phone"><br>
@@ -19,16 +20,14 @@ const API="https://vivid-urja-saas.onrender.com";
 function send(){
 fetch(API+"/api/leads",{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
+headers:{"Content-Type":"application/json"},
 body:JSON.stringify({
 name:name.value,
 phone:phone.value,
 city:city.value
 })
 })
-.then(()=>alert("Lead Sent 🚀"));
+.then(()=>alert("Lead Submitted 🚀"));
 }
 </script>
 
