@@ -1,138 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Leads CRM</title>
-
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  display:flex;
-  background:#0f172a;
-  color:white;
-}
-
-.sidebar{
-  width:220px;
-  background:#020617;
-  height:100vh;
-  padding:20px;
-}
-
-.sidebar a{
-  display:block;
-  margin:15px 0;
-  color:white;
-  text-decoration:none;
-}
-
-.main{
-  flex:1;
-  padding:20px;
-}
-
-input, select{
-  padding:8px;
-  margin:5px;
-}
-
-table{
-  width:100%;
-  margin-top:20px;
-}
-
-th,td{
-  padding:10px;
-  text-align:center;
-}
-
-button{
-  padding:5px 10px;
-  cursor:pointer;
-}
-</style>
-</head>
-
 <body>
 
-<div class="sidebar">
-  <h2>⚡ CRM</h2>
-  <a href="dashboard.html">Dashboard</a>
-  <a href="leads.html">Leads</a>
-</div>
+<h2>Leads</h2>
 
-<div class="main">
+<input id="search" placeholder="Search" onkeyup="load()">
 
-<h2>Leads Management</h2>
-
-<input id="search" placeholder="Search phone..." onkeyup="loadData()">
-
-<select id="filter" onchange="loadData()">
-<option value="">All</option>
-<option>New</option>
-<option>Hot</option>
-<option>Cold</option>
-<option>Closed</option>
-</select>
-
-<table>
+<table border="1">
 <thead>
 <tr>
 <th>Name</th>
 <th>Phone</th>
 <th>Status</th>
-<th>Dealer</th>
 <th>Action</th>
 </tr>
 </thead>
+
 <tbody id="data"></tbody>
 </table>
 
-</div>
-
 <script>
-
 const API="https://vivid-urja-saas.onrender.com";
-let dealers=[];
 
-// LOAD DEALERS
-fetch(API+"/api/dealers",{
-headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-})
-.then(res=>res.json())
-.then(d=>{ dealers=d; loadData(); });
-
-function loadData(){
-
+function load(){
 fetch(API+"/api/leads",{
 headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 })
 .then(res=>res.json())
 .then(data=>{
 
-let search=document.getElementById("search").value;
-let filter=document.getElementById("filter").value;
+let s=search.value;
 
 let html="";
 
-data.filter(l=>
-(!search || l.phone.includes(search)) &&
-(!filter || l.status===filter)
-)
+data.filter(l=>!s || l.phone.includes(s))
 .forEach(l=>{
-
-let dealerOptions=dealers.map(d=>
-<option ${l.dealer==d.email?"selected":""}>${d.email}</option>
-).join("");
-
 html+=`
 <tr>
-<td>${l.name || "-"}</td>
+<td>${l.name||"-"}</td>
 <td>${l.phone}</td>
 
 <td>
-<select onchange="update('${l._id}', this.value, '${l.dealer||""}')">
+<select onchange="update('${l._id}',this.value)">
 <option ${l.status=="New"?"selected":""}>New</option>
 <option ${l.status=="Hot"?"selected":""}>Hot</option>
 <option ${l.status=="Cold"?"selected":""}>Cold</option>
@@ -141,44 +50,35 @@ html+=`
 </td>
 
 <td>
-<select onchange="update('${l._id}', '${l.status}', this.value)">
-<option value="">None</option>
-${dealerOptions}
-</select>
-</td>
-
-<td>
 <button onclick="del('${l._id}')">❌</button>
 </td>
 
-</tr>
-`;
+</tr>`;
 });
 
-document.getElementById("data").innerHTML=html;
-
+data.innerHTML=html;
 });
-
 }
 
-function update(id,status,dealer){
+function update(id,status){
 fetch(API+"/api/leads/"+id,{
 method:"PUT",
 headers:{
 "Content-Type":"application/json",
 Authorization:"Bearer "+localStorage.getItem("token")
 },
-body:JSON.stringify({status,dealer})
-}).then(()=>loadData());
+body:JSON.stringify({status})
+}).then(load);
 }
 
 function del(id){
 fetch(API+"/api/leads/"+id,{
 method:"DELETE",
 headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-}).then(()=>loadData());
+}).then(load);
 }
 
+load();
 </script>
 
 </body>
