@@ -40,7 +40,12 @@ app.post("/api/register", async (req, res) => {
 
   res.json({ msg: "User created" });
 });
-
+// Auto Lead Score
+function getScore(status){
+  if(status==="Hot") return 100;
+  if(status==="Cold") return 50;
+  return 10;
+}
 // 🔐 Login
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
