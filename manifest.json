@@ -1,15 +1,8 @@
 {
-  "name": "VIVID URJA",
-  "short_name": "Solar App",
+  "name": "VIVID URJA CRM",
+  "short_name": "Solar CRM",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f2027",
-  "theme_color": "#28a745",
-  "icons": [
-    {
-      "src": "logo.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ]
+  "background_color": "#000000",
+  "theme_color": "#00c6ff"
 }
