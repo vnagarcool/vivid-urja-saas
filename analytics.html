@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 <body>
 
 <h2>Analytics</h2>
-
-<div>Total: <span id="t"></span></div>
-<div>Hot: <span id="h"></span></div>
+<canvas id="chart"></canvas>
 
 <script>
 const API="https://vivid-urja-saas.onrender.com";
@@ -14,9 +15,23 @@ fetch(API+"/api/leads",{
 headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 })
 .then(res=>res.json())
-.then(d=>{
-t.innerText=d.length;
-h.innerText=d.filter(l=>l.status==="Hot").length;
+.then(data=>{
+
+new Chart(document.getElementById("chart"),{
+type:"bar",
+data:{
+labels:["New","Hot","Cold","Closed"],
+datasets:[{
+data:[
+data.filter(l=>l.status==="New").length,
+data.filter(l=>l.status==="Hot").length,
+data.filter(l=>l.status==="Cold").length,
+data.filter(l=>l.status==="Closed").length
+]
+}]
+}
+});
+
 });
 </script>
 
