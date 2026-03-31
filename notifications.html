@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Notifications</title>
+<style>
+body{background:#020617;color:white;font-family:Arial;padding:20px}
+</style>
+</head>
+<body>
+
+<h2>🔔 Notifications</h2>
+
+<ul id="list"></ul>
+
+<script>
+const API="https://vivid-urja-saas.onrender.com";
+
+fetch(API+"/api/notify")
+.then(res=>res.json())
+.then(data=>{
+let html="";
+data.forEach(n=>{
+html+=<li>${n}</li>;
+});
+document.getElementById("list").innerHTML=html;
+});
+</script>
+
+</body>
+</html>
