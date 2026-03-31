@@ -1,45 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Analytics</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body{background:#0f172a;color:white;font-family:Arial;padding:20px}
-.card{background:#1e293b;padding:20px;margin:10px;border-radius:10px}
-</style>
-</head>
 <body>
 
-<h2>📊 Analytics Dashboard</h2>
+<h2>Analytics</h2>
 
-<div class="card">Total Leads: <span id="total"></span></div>
-<div class="card">Hot Leads: <span id="hot"></span></div>
-
-<canvas id="chart"></canvas>
+<div>Total: <span id="t"></span></div>
+<div>Hot: <span id="h"></span></div>
 
 <script>
-
 const API="https://vivid-urja-saas.onrender.com";
 
 fetch(API+"/api/leads",{
 headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 })
 .then(res=>res.json())
-.then(data=>{
-
-let hot=data.filter(l=>l.status==="Hot").length;
-
-document.getElementById("total").innerText=data.length;
-document.getElementById("hot").innerText=hot;
-
-new Chart(document.getElementById("chart"),{
-type:"doughnut",
-data:{
-labels:["Hot","Other"],
-datasets:[{data:[hot,data.length-hot]}]
-}
-});
-
+.then(d=>{
+t.innerText=d.length;
+h.innerText=d.filter(l=>l.status==="Hot").length;
 });
 </script>
 
