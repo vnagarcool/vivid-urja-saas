@@ -4,8 +4,8 @@
 
 <h2>Login</h2>
 
-<input id="email" placeholder="Email"><br>
-<input id="pass" placeholder="Password"><br><br>
+<input id="email"><br>
+<input id="pass"><br>
 
 <button onclick="login()">Login</button>
 
@@ -23,17 +23,10 @@ password:pass.value
 })
 .then(res=>res.json())
 .then(d=>{
-if(d.token){
 localStorage.setItem("token",d.token);
 
-if(d.role==="admin"){
-location.href="dashboard.html";
-}else{
-location.href="leads.html";
-}
-}else{
-alert("Invalid login ❌");
-}
+if(d.role==="admin") location.href="dashboard.html";
+else location.href="leads.html";
 });
 }
 </script>
