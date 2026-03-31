@@ -2,19 +2,9 @@
 <html>
 <body>
 
-<h2>Leads CRM</h2>
-
-<input id="search" placeholder="Search phone..." onkeyup="load()">
+<h2>Leads</h2>
 
 <table border="1">
-<thead>
-<tr>
-<th>Name</th>
-<th>Phone</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
 <tbody id="data"></tbody>
 </table>
 
@@ -25,62 +15,28 @@ function load(){
 fetch(API+"/api/leads",{
 headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 })
-.then(res=>res.json())
+.then(r=>r.json())
 .then(data=>{
-
-let s=search.value;
-
 let html="";
-
-data.filter(l=>!s || l.phone.includes(s))
-.forEach(l=>{
+data.forEach(l=>{
 html+=`
 <tr>
-<td>${l.name||"-"}</td>
+<td>${l.name}</td>
 <td>${l.phone}</td>
+<td>${l.status}</td>
 
 <td>
-<select onchange="update('${l._id}',this.value)">
-<option ${l.status=="New"?"selected":""}>New</option>
-<option ${l.status=="Hot"?"selected":""}>Hot</option>
-<option ${l.status=="Cold"?"selected":""}>Cold</option>
-<option ${l.status=="Closed"?"selected":""}>Closed</option>
-</select>
-</td>
-
-<td>
-<button onclick="wa('${l.phone}')">📲</button>
+<button onclick="wa('${l.phone}')">WA</button>
 <button onclick="pdf('${l._id}')">PDF</button>
-<button onclick="del('${l._id}')">❌</button>
 </td>
 </tr>`;
 });
-
 document.getElementById("data").innerHTML=html;
-
 });
 }
 
-function update(id,status){
-fetch(API+"/api/leads/"+id,{
-method:"PUT",
-headers:{
-"Content-Type":"application/json",
-Authorization:"Bearer "+localStorage.getItem("token")
-},
-body:JSON.stringify({status})
-}).then(load);
-}
-
-function del(id){
-fetch(API+"/api/leads/"+id,{
-method:"DELETE",
-headers:{Authorization:"Bearer "+localStorage.getItem("token")}
-}).then(load);
-}
-
-function wa(phone){
-window.open("https://wa.me/"+phone+"?text=Solar inquiry from VIVID URJA");
+function wa(p){
+window.open("https://wa.me/"+p);
 }
 
 function pdf(id){
