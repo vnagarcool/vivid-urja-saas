@@ -1,118 +1,75 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const jwt = require("jsonwebtoken");
+const express=require("express");
+const mongoose=require("mongoose");
+const cors=require("cors");
+const jwt=require("jsonwebtoken");
 
-const app = express();
+const app=express();
 app.use(express.json());
 app.use(cors());
 
-const JWT_SECRET = "supersecret123";
+const JWT_SECRET="secret123";
 
-// 🔗 MongoDB
-mongoose.connect(process.env.MONGO_URI)
-.then(()=> console.log("MongoDB Connected ✅"))
-.catch(err=> console.log(err));
+mongoose.connect(process.env.MONGO_URI);
 
-// 📦 Models
-const User = mongoose.model("User", {
-  email: String,
-  password: String,
-  role: String
+const User=mongoose.model("User",{
+email:String,
+password:String,
+role:String
 });
 
-const Lead = mongoose.model("Lead", {
-  name: String,
-  phone: String,
-  city: String,
-  status: String
+const Lead=mongoose.model("Lead",{
+name:String,
+phone:String,
+city:String,
+status:{type:String,default:"New"}
 });
 
-// 🔐 Register
-app.post("/api/register", async (req, res) => {
-  const { email } = req.body;
+// AUTH
+function auth(req,res,next){
+const token=req.headers.authorization;
+if(!token) return res.json({msg:"No token"});
 
-  const exist = await User.findOne({ email });
-  if (exist) return res.json({ msg: "User exists" });
-
-  const user = new User(req.body);
-  await user.save();
-
-  res.json({ msg: "User created" });
-});
-// Auto Lead Score
-function getScore(status){
-  if(status==="Hot") return 100;
-  if(status==="Cold") return 50;
-  return 10;
+try{
+const d=jwt.verify(token.split(" ")[1],JWT_SECRET);
+req.user=d;
+next();
+}catch{
+res.json({msg:"Invalid token"});
 }
-// 🔐 Login
-app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = await User.findOne({ email, password });
-  if (!user) return res.json({ msg: "Invalid login" });
-
-  const token = jwt.sign({ id: user._id, role: user.role }, JWT_SECRET);
-
-  res.json({ token, role: user.role });
-});
-
-// 🔒 Middleware
-function auth(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.json({ msg: "No token" });
-
-  const decoded = jwt.verify(token, JWT_SECRET);
-  req.user = decoded;
-  next();
 }
 
-// ➕ Add Lead
-app.post("/api/leads", auth, async (req, res) => {
-  const lead = new Lead({
-    name: req.body.name,
-    phone: req.body.phone,
-    city: req.body.city,
-    status: "New"
-  });
+// LOGIN
+app.post("/api/login",async(req,res)=>{
+const u=await User.findOne({email:req.body.email});
+if(!u || u.password!==req.body.password)
+return res.json({msg:"Invalid"});
 
-  await lead.save();
-  res.json({ msg: "Lead added" });
+const token=jwt.sign({id:u._id,role:u.role},JWT_SECRET);
+res.json({token,role:u.role});
 });
 
-// 📋 Get Leads
-app.get("/api/leads", auth, async (req, res) => {
-  const leads = await Lead.find();
-  res.json(leads);
+// LEADS
+app.post("/api/leads",async(req,res)=>{
+await Lead.create(req.body);
+res.json({msg:"Added"});
 });
 
-// ❌ Delete Lead
-app.delete("/api/leads/:id", auth, async (req, res) => {
-  await Lead.findByIdAndDelete(req.params.id);
-  res.json({ msg: "Deleted" });
-});
-// 🔄 Update Lead (status + dealer)
-app.put("/api/leads/:id", auth, async (req, res) => {
-  const { status, dealer } = req.body;
-
-  await Lead.findByIdAndUpdate(req.params.id, {
-    status,
-    dealer
-  });
-
-  res.json({ msg: "Lead updated ✅" });
+app.get("/api/leads",auth,async(req,res)=>{
+res.json(await Lead.find());
 });
 
-// 👥 Get Dealers
-app.get("/api/dealers", auth, async (req, res) => {
-  const dealers = await User.find({ role: "dealer" });
-  res.json(dealers);
-});
-// 🌐 Root
-app.get("/", (req, res) => {
-  res.send("VIVID URJA SERVER RUNNING 🚀");
+app.put("/api/leads/:id",auth,async(req,res)=>{
+await Lead.findByIdAndUpdate(req.params.id,req.body);
+res.json({msg:"Updated"});
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, ()=> console.log("Server Running 🚀"));
+app.delete("/api/leads/:id",auth,async(req,res)=>{
+await Lead.findByIdAndDelete(req.params.id);
+res.json({msg:"Deleted"});
+});
+
+// NOTIFICATIONS
+let notifications=[];
+app.get("/api/notify",(req,res)=>res.json(notifications));
+
+app.listen(5000,()=>console.log("Server running"));
