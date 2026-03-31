@@ -1,220 +1,26 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>VIVID URJA CRM</title>
-
-<style>
-body{
-margin:0;
-font-family:Arial;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
-}
-
-/* Sidebar */
-.sidebar{
-width:220px;
-height:100vh;
-position:fixed;
-background:#111;
-padding:20px;
-}
-
-.sidebar h2{
-color:#00c6ff;
-}
-
-.sidebar a{
-display:block;
-color:#aaa;
-padding:10px;
-text-decoration:none;
-margin:5px 0;
-}
-
-.sidebar a:hover{
-background:#00c6ff;
-color:black;
-border-radius:5px;
-}
-
-/* Main */
-.main{
-margin-left:240px;
-padding:20px;
-}
-
-/* Cards */
-.cards{
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-}
-
-.card{
-background:rgba(255,255,255,0.1);
-padding:20px;
-border-radius:10px;
-flex:1;
-min-width:150px;
-}
-
-/* Table */
-table{
-width:100%;
-margin-top:20px;
-border-collapse:collapse;
-background:rgba(255,255,255,0.05);
-}
-
-th,td{
-padding:12px;
-border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-button{
-background:#00c6ff;
-border:none;
-padding:5px 10px;
-cursor:pointer;
-border-radius:5px;
-}
-
-/* Mobile */
-@media(max-width:768px){
-.sidebar{
-width:100%;
-height:auto;
-position:relative;
-}
-.main{
-margin-left:0;
-}
-.cards{
-flex-direction:column;
-}
-}
-</style>
-
-</head>
-
 <body>
 
-<!-- Sidebar -->
-<div class="sidebar">
-<h2>⚡ VIVID CRM</h2>
+<h2>Dashboard</h2>
 
-<a href="dashboard.html">Dashboard</a>
-<a href="leads.html">Leads</a>
-<a href="analytics.html">Analytics</a>
-<a href="notifications.html">Notifications</a>
-<a href="login.html">Logout</a>
-</div>
-
-<!-- Main -->
-<div class="main">
-
-<h2>🚀 Admin Dashboard</h2>
-
-<div class="cards">
-<div class="card">Total Leads: <b id="total"></b></div>
-<div class="card">Hot Leads: <b id="hot"></b></div>
-<div class="card">Cold Leads: <b id="cold"></b></div>
-</div>
-
-<table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Phone</th>
-<th>City</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
-
-<tbody id="data"></tbody>
-</table>
-<a href="kanban.html">
-<button>📊 Open Pipeline</button>
-</a>
-</div>
+<div>Total: <span id="t"></span></div>
 
 <script>
-
 const API="https://vivid-urja-saas.onrender.com";
 
 function load(){
-
 fetch(API+"/api/leads",{
-headers:{
-Authorization:"Bearer "+localStorage.getItem("token")
-}
+headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 })
-.then(res=>res.json())
-.then(data=>{
-
-// Stats
-total.innerText=data.length;
-hot.innerText=data.filter(l=>l.status==="Hot").length;
-cold.innerText=data.filter(l=>l.status==="Cold").length;
-
-// Table
-let html="";
-
-data.forEach(l=>{
-html+=`
-<tr>
-<td>${l.name||"-"}</td>
-<td>${l.phone}</td>
-<td>${l.city||"-"}</td>
-
-<td>
-<select onchange="update('${l._id}',this.value)">
-<option ${l.status=="New"?"selected":""}>New</option>
-<option ${l.status=="Hot"?"selected":""}>Hot</option>
-<option ${l.status=="Cold"?"selected":""}>Cold</option>
-<option ${l.status=="Closed"?"selected":""}>Closed</option>
-</select>
-</td>
-
-<td>
-<button onclick="del('${l._id}')">❌</button>
-</td>
-
-</tr>
-`;
-});
-
-document.getElementById("data").innerHTML=html;
-
+.then(r=>r.json())
+.then(d=>{
+t.innerText=d.length;
 });
 }
 
-function update(id,status){
-fetch(API+"/api/leads/"+id,{
-method:"PUT",
-headers:{
-"Content-Type":"application/json",
-Authorization:"Bearer "+localStorage.getItem("token")
-},
-body:JSON.stringify({status})
-}).then(load);
-}
-
-function del(id){
-fetch(API+"/api/leads/"+id,{
-method:"DELETE",
-headers:{
-Authorization:"Bearer "+localStorage.getItem("token")
-}
-}).then(load);
-}
-
+setInterval(load,5000);
 load();
-
 </script>
 
 </body>
