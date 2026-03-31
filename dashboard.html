@@ -2,7 +2,7 @@
 <html>
 <body>
 
-<h2>Dashboard</h2>
+<h2>Admin Dashboard</h2>
 
 <div>Total Leads: <span id="total"></span></div>
 <div>Hot Leads: <span id="hot"></span></div>
@@ -15,9 +15,8 @@ headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 })
 .then(res=>res.json())
 .then(data=>{
-document.getElementById("total").innerText=data.length;
-document.getElementById("hot").innerText=
-data.filter(l=>l.status==="Hot").length;
+total.innerText=data.length;
+hot.innerText=data.filter(l=>l.status==="Hot").length;
 });
 </script>
 
