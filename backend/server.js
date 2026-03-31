@@ -87,7 +87,23 @@ app.delete("/api/leads/:id", auth, async (req, res) => {
   await Lead.findByIdAndDelete(req.params.id);
   res.json({ msg: "Deleted" });
 });
+// 🔄 Update Lead (status + dealer)
+app.put("/api/leads/:id", auth, async (req, res) => {
+  const { status, dealer } = req.body;
 
+  await Lead.findByIdAndUpdate(req.params.id, {
+    status,
+    dealer
+  });
+
+  res.json({ msg: "Lead updated ✅" });
+});
+
+// 👥 Get Dealers
+app.get("/api/dealers", auth, async (req, res) => {
+  const dealers = await User.find({ role: "dealer" });
+  res.json(dealers);
+});
 // 🌐 Root
 app.get("/", (req, res) => {
   res.send("VIVID URJA SERVER RUNNING 🚀");
