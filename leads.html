@@ -2,9 +2,9 @@
 <html>
 <body>
 
-<h2>Leads</h2>
+<h2>Leads CRM</h2>
 
-<input id="search" placeholder="Search" onkeyup="load()">
+<input id="search" placeholder="Search phone..." onkeyup="load()">
 
 <table border="1">
 <thead>
@@ -15,7 +15,6 @@
 <th>Action</th>
 </tr>
 </thead>
-
 <tbody id="data"></tbody>
 </table>
 
@@ -50,13 +49,15 @@ html+=`
 </td>
 
 <td>
+<button onclick="wa('${l.phone}')">📲</button>
+<button onclick="pdf('${l._id}')">PDF</button>
 <button onclick="del('${l._id}')">❌</button>
 </td>
-
 </tr>`;
 });
 
-data.innerHTML=html;
+document.getElementById("data").innerHTML=html;
+
 });
 }
 
@@ -76,6 +77,14 @@ fetch(API+"/api/leads/"+id,{
 method:"DELETE",
 headers:{Authorization:"Bearer "+localStorage.getItem("token")}
 }).then(load);
+}
+
+function wa(phone){
+window.open("https://wa.me/"+phone+"?text=Solar inquiry from VIVID URJA");
+}
+
+function pdf(id){
+window.open(API+"/api/quote/"+id);
 }
 
 load();
